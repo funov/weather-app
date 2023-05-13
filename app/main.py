@@ -1,6 +1,6 @@
 from os import environ
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
 
@@ -32,8 +32,13 @@ async def root(request: Request):
 
 @app.get("/api/v1.0/current/{location}")
 async def say_hello(location: str, lang: str = 'ru', units: str = 'metric'):
-    return await app.state.weather_client.get_current_weather(
+    weather = await app.state.weather_client.get_current_weather(
         location,
         lang,
         units
     )
+
+    if len(weather.keys()) == 0:
+        raise HTTPException(status_code=404, detail="Weather not found")
+
+    return weather

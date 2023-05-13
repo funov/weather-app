@@ -27,21 +27,10 @@ class WeatherClient:
             )
         response_json = response.json()
 
-        if int(response_json['cod']) == 404 \
-                and response_json['message'] == 'city not found':
-            return {
-                'is_success': False,
-                'error_message': 'Location not found'
-            }
-
-        if int(response_json['cod']) != 200:
-            return {
-                'is_success': False,
-                'error_message': None
-            }
+        if response.status_code != 200:
+            return {}
 
         return {
-            'is_success': True,
             'location': response_json['name'],
             'temperature': response_json['main']['temp'],
             'description': response_json['weather'][0]['description'],

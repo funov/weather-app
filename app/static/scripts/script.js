@@ -7,10 +7,10 @@ async function fetchWeatherData(location) {
     const response = await fetch(`/api/v1.0/current/${location}`);
     const data = await response.json();
 
-    if (response.ok && data['is_success'] === true) {
+    if (response.ok) {
         displayWeatherData(data);
     } else {
-        displayWeatherErr(data['error_message']);
+        displayWeatherErr(data['detail']);
     }
 }
 
@@ -29,11 +29,6 @@ function displayWeatherData(data) {
 }
 
 function displayWeatherErr(error_message) {
-    if (error_message === null) {
-        document.getElementById('location').innerText = 'Локации такой нет';
-    } else {
-        document.getElementById('location').innerText = error_message;
-    }
-
+    document.getElementById('location').innerText = error_message;
     document.getElementById('weatherDisplay').style.display = 'block';
 }
