@@ -4,8 +4,8 @@ from fastapi import FastAPI, Request
 from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
 
-from app.weather_client.open_weather_api_urls import WeatherApiUrls
-from app.weather_client.open_weather_client import WeatherClient
+from app.weather_client.weather_api_urls import WeatherApiUrls
+from app.weather_client.weather_client import WeatherClient
 
 app = FastAPI()
 app.mount("/app/static", StaticFiles(directory="app/static"), name="static")
@@ -32,9 +32,8 @@ async def root(request: Request):
 
 @app.get("/api/v1.0/current/{location}")
 async def say_hello(location: str, lang: str = 'ru', units: str = 'metric'):
-    weather = await app.state.weather_client.get_current_weather(
+    return await app.state.weather_client.get_current_weather(
         location,
         lang,
         units
     )
-    return weather

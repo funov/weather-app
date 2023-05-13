@@ -7,10 +7,10 @@ async function fetchWeatherData(location) {
     const response = await fetch(`/api/v1.0/current/${location}`);
     const data = await response.json();
 
-    if (response.ok) {
+    if (response.ok && data['is_success'] === true) {
         displayWeatherData(data);
     } else {
-        alert('Ухх...');
+        displayWeatherErr(data['error_message']);
     }
 }
 
@@ -25,6 +25,15 @@ function displayWeatherData(data) {
     document.getElementById('visibility').innerText = `Видно ${data.visibility} м.`;
     document.getElementById('temperature_feels_like').innerText = `Ощущается ${data.temperature_feels_like}°C`;
     document.getElementById('wind_speed').innerText = `Скорость ветра ${data.wind_speed} м./с.`;
+    document.getElementById('weatherDisplay').style.display = 'block';
+}
+
+function displayWeatherErr(error_message) {
+    if (error_message === null) {
+        document.getElementById('location').innerText = 'Локации такой нет';
+    } else {
+        document.getElementById('location').innerText = error_message;
+    }
 
     document.getElementById('weatherDisplay').style.display = 'block';
 }

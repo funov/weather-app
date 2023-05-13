@@ -24,3 +24,8 @@ GET http://127.0.0.1:80/api/v1.0/current/Екатеринбург?units=standard
 Accept: application/json
 
 ###
+
+GET http://127.0.0.1:80/api/v1.0/current/b
+Accept: application/json
+
+###

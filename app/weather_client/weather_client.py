@@ -1,5 +1,5 @@
 import httpx
-from app.weather_client.open_weather_api_urls import WeatherApiUrls
+from app.weather_client.weather_api_urls import WeatherApiUrls
 
 
 class WeatherClient:
@@ -26,7 +26,22 @@ class WeatherClient:
                 }
             )
         response_json = response.json()
-        main_info = {
+
+        if int(response_json['cod']) == 404 \
+                and response_json['message'] == 'city not found':
+            return {
+                'is_success': False,
+                'error_message': 'Location not found'
+            }
+
+        if int(response_json['cod']) != 200:
+            return {
+                'is_success': False,
+                'error_message': None
+            }
+
+        return {
+            'is_success': True,
             'location': response_json['name'],
             'temperature': response_json['main']['temp'],
             'description': response_json['weather'][0]['description'],
@@ -38,8 +53,6 @@ class WeatherClient:
             'temperature_feels_like': response_json['main']['feels_like'],
             'wind_speed': response_json['wind']['speed']
         }
-
-        return main_info
 
     async def get_five_days_weather(self) -> None:
         raise NotImplementedError()
