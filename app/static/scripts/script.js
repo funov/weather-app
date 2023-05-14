@@ -1,61 +1,58 @@
-document.getElementById('getWeather').addEventListener('click', async () => {
-    const city = document.getElementById('city').value;
-    await fetchWeatherData(city);
-});
-
-async function fetchWeatherData(location) {
-    const response = await fetch(`/api/v1.0/current/${location}`);
-    const data = await response.json();
-
-    if (response.ok) {
-        displayWeatherData(data);
-    } else {
-        displayWeatherErr(data['detail']);
-    }
-}
-
-function displayWeatherData(data) {
-    const {
-        current: {
-            cloudcover,
-            temperature,
-            humidity,
-            observation_time: observationTime,
-            pressure,
-            uv_index: uvIndex,
-            visibility,
-            is_day: isDay,
-            weather_descriptions: description,
-            wind_speed: windSpeed,
-        },
-        location: {name},
-    } = data;
-
-
-    document.getElementById('location').innerText = data.location;
-    document.getElementById('temperature').innerText = `Температура ${data.temperature}°C`;
-    document.getElementById('description').innerText = data.description;
-    document.getElementById('icon_id').innerText = `${data.icon_id} код картинки, чтобы выкачать потом его🤩🤩`;//
-    document.getElementById('humidity').innerText = `Влажность ${data.humidity}%`;
-    document.getElementById('pressure').innerText = `Давление ${data.pressure}%`;
-    document.getElementById('visibility').innerText = `Видно ${data.visibility} м.`;
-    document.getElementById('temperature_feels_like').innerText = `Ощущается ${data.temperature_feels_like}°C`;
-    document.getElementById('wind_speed').innerText = `Скорость ветра ${data.wind_speed} м./с.`;
-    document.getElementById('weatherDisplay').style.display = 'block';
-}
-
-function displayWeatherErr(error_message) {
-    document.getElementById('location').innerText = error_message;
-    document.getElementById('weatherDisplay').style.display = 'block';
-}
-
-/////////////
-
 const root = document.getElementById("root");
 const popup = document.getElementById("popup");
 const textInput = document.getElementById("text-input");
-let store = {};
+const form = document.getElementById("form");
 
+let store = {
+    city: "Minsk",
+    temperature: 0,
+    weatherTime: "00:00 AM",
+    isDay: "yes",
+    description: "",
+    iconId: '01',
+    properties: {
+        humidity: {},
+        windSpeed: {},
+        pressure: {},
+        feelsLike: {},
+        visibility: {},
+    },
+};
+
+const fetchData = async () => {
+    try {
+        const response = await fetch(`/api/v1.0/current/${store.city}`);
+        let weather = await response.json();
+        let isDay = "yes";
+
+        store = {
+            ...store,
+            city: weather.location,
+            temperature: weather.temperature,
+            weatherTime: weather.weather_time,
+            isDay,
+            description: weather.description,
+            iconId: weather.icon_id,
+            properties: {
+                humidity: {
+                    title: "humidity", value: `${weather.humidity}%`, icon: "humidity.png",
+                }, windSpeed: {
+                    title: "wind speed", value: `${weather.wind_speed} km/h`, icon: "wind.png",
+                }, pressure: {
+                    title: "pressure", value: `${weather.pressure} %`, icon: "gauge.png",
+                }, feelsLike: {
+                    title: "feels like", value: `${weather.temperature_feels_like}`, icon: "uv-index.png",
+                }, visibility: {
+                    title: "visibility", value: `${weather.visibility}%`, icon: "visibility.png",
+                },
+            },
+        };
+
+        renderComponent();
+    } catch (err) {
+        console.log(err);
+    }
+};
 
 const getImage = (description) => {
     const value = description.toLowerCase();
@@ -81,7 +78,7 @@ const renderProperty = (properties) => {
         .map(({title, value, icon}) => {
             return `<div class="property">
             <div class="property-icon">
-              <img src="./img/icons/${icon}" alt="">
+              <img src="./app/static/img/icons/${icon}" alt="">
             </div>
             <div class="property-info">
               <div class="property-info__value">${value}</div>
@@ -93,14 +90,7 @@ const renderProperty = (properties) => {
 };
 
 const markup = () => {
-    const {
-        city,
-        description,
-        observationTime,
-        temperature,
-        isDay,
-        properties
-    } = store;
+    const {city, description, observationTime, temperature, isDay, properties} = store;
     const containerClass = isDay === "yes" ? "is-day" : "";
 
     return `<div class="container ${containerClass}">
@@ -113,7 +103,7 @@ const markup = () => {
               </div>
               <div class="city-info">
                 <div class="top-left">
-                <img class="icon" src="./img/${getImage(description)}" alt="" />
+                <img class="icon" src="./app/static/img/${getImage(description)}" alt="" />
                 <div class="description">${description}</div>
               </div>
             
@@ -140,8 +130,7 @@ const renderComponent = () => {
 
 const handleInput = (e) => {
     store = {
-        ...store,
-        city: e.target.value,
+        ...store, city: e.target.value,
     };
 };
 
@@ -156,12 +145,7 @@ const handleSubmit = (e) => {
     togglePopupClass();
 };
 
-document.getElementById('form').addEventListener('submit', async function (event) {
-    event.preventDefault();
-    let city = document.getElementById('city').value;
-    store = await fetch(`/api/v1.0/current/${location}`);
-    renderComponent()
-});
-
+form.addEventListener("submit", handleSubmit);
+textInput.addEventListener("input", handleInput);
 
 fetchData();

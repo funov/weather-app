@@ -1,32 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Document</title>
 
     <link href="{{ url_for('static', path='/styles/style.css') }}" rel="stylesheet">
-  </head>
-  <body>
-    <div id="app">
-      <div id="root">
+</head>
+<body>
+<div id="app">
+    <div id="root">
+        <img class="loader" src="{{ url_for('static', path='/img/loader.gif') }}" alt="loader"/>
+    </div>
 
-        <img class="loader" src="{{ url_for('static', path='/img/loader.gif') }}" alt="loader" />
-      </div>
-
-      <div class="popup" id="popup">
-        <form id="myForm">
-          Введите город: <input type="text" id="city" name="city"><br>
-          <input type="submit" value="Отправить">
+    <div class="popup" id="popup">
+        <form action="GET" class="form" id="form">
+            <div class="form-group">
+                <input
+                        type="text"
+                        value=""
+                        name="city"
+                        class="form-input"
+                        id="text-input"
+                        placeholder="London"
+                        required
+                />
+                <input
+                        type="submit"
+                        class="form-submit"
+                        id="submit-button"
+                        value="OK"
+                />
+            </div>
         </form>
 
         <div class="popup-close" id="close">
-          <span></span>
+            <span></span>
         </div>
-      </div>
     </div>
+</div>
 
-    <script src="{{ url_for('static', path='/scripts/script.js') }}"></script>
-  </body>
+<script src="{{ url_for('static', path='/scripts/script.js') }}"></script>
+</body>
 </html>
