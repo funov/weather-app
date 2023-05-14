@@ -1,4 +1,5 @@
 import httpx
+import logging
 from app.weather_client.weather_api_urls import WeatherApiUrls
 
 
@@ -6,9 +7,11 @@ class WeatherClient:
     def __init__(
             self,
             weather_api_key: str,
-            weather_api_urls: WeatherApiUrls) -> None:
+            weather_api_urls: WeatherApiUrls,
+            logger: logging.Logger) -> None:
         self.weather_api_key = weather_api_key
         self.weather_api_urls = weather_api_urls
+        self.logger = logger
 
     async def get_current_weather(
             self,
@@ -25,9 +28,13 @@ class WeatherClient:
                     'units': units
                 }
             )
+        status_code = response.status_code
+        url = response.url
+        http_version = response.http_version
+        self.logger.info(f'GET {url} {http_version} {status_code}')
         response_json = response.json()
 
-        if response.status_code != 200:
+        if status_code != 200:
             return {}
 
         description = response_json['weather'][0]['description']

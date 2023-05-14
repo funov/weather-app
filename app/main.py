@@ -1,3 +1,4 @@
+import logging
 from os import environ
 
 from fastapi import FastAPI, Request, HTTPException
@@ -8,6 +9,7 @@ from app.weather_client.weather_api_urls import WeatherApiUrls
 from app.weather_client.weather_client import WeatherClient
 
 app = FastAPI()
+app.logger = logging.getLogger("uvicorn")
 app.mount("/app/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
 
@@ -21,7 +23,8 @@ async def startup_event():
     )
     app.state.weather_client = WeatherClient(
         weather_api_key,
-        weather_api_urls
+        weather_api_urls,
+        app.logger
     )
 
 
