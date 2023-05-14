@@ -2,10 +2,21 @@ const root = document.getElementById("root");
 const popup = document.getElementById("popup");
 const textInput = document.getElementById("text-input");
 const form = document.getElementById("form");
+const close = document.getElementById("close");
 
 let store = {
-    city: "Minsk", temperature: 0, weatherTime: "00:00 AM", timezone: 3600, description: "", iconId: '01', properties: {
-        humidity: {}, windSpeed: {}, pressure: {}, feelsLike: {}, visibility: {},
+    city: "Minsk",
+    temperature: 0,
+    weatherTime: "00:00 AM",
+    timezone: 3600,
+    description: "",
+    iconId: '01',
+    properties: {
+        humidity: {},
+        windSpeed: {},
+        pressure: {},
+        feelsLike: {},
+        visibility: {},
     },
 };
 
@@ -23,22 +34,22 @@ const fetchData = async () => {
         store = {
             ...store,
             city: weather.location,
-            temperature: weather.temperature,
+            temperature: Math.round(weather.temperature),
             weatherTime: weather.weather_time,
             timezone: weather.timezone,
             description: weather.description,
             iconId: weather.icon_id,
             properties: {
                 humidity: {
-                    title: "humidity", value: `${weather.humidity}%`, icon: "humidity.png",
+                    title: "влажность", value: `${weather.humidity} %`, icon: "humidity.png",
                 }, windSpeed: {
-                    title: "wind speed", value: `${weather.wind_speed} km/h`, icon: "wind.png",
+                    title: "скорость ветра", value: `${weather.wind_speed} км/ч`, icon: "wind.png",
                 }, pressure: {
-                    title: "pressure", value: `${weather.pressure} %`, icon: "gauge.png",
+                    title: "давление", value: `${Math.round(weather.pressure*0.75)} мм рт.ст.`, icon: "gauge.png",
                 }, feelsLike: {
-                    title: "feels like", value: `${weather.temperature_feels_like}°`, icon: "feels_like.png",
+                    title: "ощущается", value: `${Math.round(weather.temperature_feels_like)}°`, icon: "feels_like.png",
                 }, visibility: {
-                    title: "visibility", value: `${(weather.visibility / 1000).toFixed(1)} km`, icon: "visibility.png",
+                    title: "видимость", value: `${(weather.visibility / 1000).toFixed(1)} км`, icon: "visibility.png",
                 },
             },
         };
@@ -69,14 +80,16 @@ const renderProperty = (properties) => {
 const markup = () => {
     const {city, description, weatherTime, temperature, timezone, properties, iconId} = store;
 
-    const localTime = new Date(weatherTime * 1000).toLocaleString().split(' ')[1];
-    let hours = new Date(new Date((weatherTime + timezone) * 1000).toISOString()).getUTCHours();
+    let date = new Date(new Date((weatherTime + timezone) * 1000).toISOString());
+    let hours = date.getUTCHours();
+    let minutes = date.getUTCMinutes();
+    const localTime = `${hours}:${minutes}`;
     const containerClass = hours > 6 && hours < 20 ? "is-day" : "";
 
     return `<div class="container ${containerClass}">
             <div class="top">
               <div class="city">
-                <div class="city-subtitle">Weather Today in</div>
+                <div class="city-subtitle">Погода сегодня</div>
                   <div class="city-title" id="city">
                   <span>${city}</span>
                 </div>
@@ -88,7 +101,7 @@ const markup = () => {
               </div>
             
               <div class="top-right">
-                <div class="city-info__subtitle">as of ${localTime}</div>
+                <div class="city-info__subtitle">Время ${localTime}</div>
                 <div class="city-info__title">${temperature}°</div>
               </div>
             </div>
@@ -114,6 +127,10 @@ const handleInput = (e) => {
     };
 };
 
+const handleClose = () => {
+    popup.classList.toggle("active");
+}
+
 const handleSubmit = async (e) => {
     e.preventDefault();
     const value = store.city;
@@ -127,5 +144,5 @@ const handleSubmit = async (e) => {
 
 form.addEventListener("submit", handleSubmit);
 textInput.addEventListener("input", handleInput);
-
+close.addEventListener("click", handleClose);
 fetchData().then();
