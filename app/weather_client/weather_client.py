@@ -30,17 +30,20 @@ class WeatherClient:
         if response.status_code != 200:
             return {}
 
+        description = response_json['weather'][0]['description']
+        icon_id = response_json['weather'][0]['icon'][:-1]
         return {
             'location': response_json['name'],
             'temperature': response_json['main']['temp'],
-            'description': response_json['weather'][0]['description'],
-            'icon_id': response_json['weather'][0]['icon'],
+            'description': description.capitalize(),
+            'icon_id': icon_id,
             'weather_time': response_json['dt'],
             'humidity': response_json['main']['humidity'],
             'pressure': response_json['main']['pressure'],
             'visibility': response_json['visibility'],
             'temperature_feels_like': response_json['main']['feels_like'],
-            'wind_speed': response_json['wind']['speed']
+            'wind_speed': response_json['wind']['speed'],
+            'timezone': response_json['timezone']
         }
 
     async def get_five_days_weather(self) -> None:
