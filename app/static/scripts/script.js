@@ -22,11 +22,11 @@ let store = {
 
 const fetchData = async () => {
     try {
-        root.innerHTML = "<img class=\"loader\" src=\"./app/static/images/loader.gif\" alt=\"loader\"/>"
+        root.innerHTML = "<img class=\"loader\" src=\"./app/static/images/loader.gif\" alt=\"loader\"/>";
         const response = await fetch(`/api/v1.0/current/${store.city}`);
 
         if (!response.ok) {
-            // TODO json пустой в этом случае
+            alert("Потом будет работать🥺🥺🥺");
         }
 
         let weather = await response.json();
@@ -45,7 +45,7 @@ const fetchData = async () => {
                 }, windSpeed: {
                     title: "скорость ветра", value: `${weather.wind_speed} км/ч`, icon: "wind.png",
                 }, pressure: {
-                    title: "давление", value: `${Math.round(weather.pressure*0.75)} мм рт.ст.`, icon: "gauge.png",
+                    title: "давление", value: `${Math.round(weather.pressure * 0.75)} мм рт.ст.`, icon: "gauge.png",
                 }, feelsLike: {
                     title: "ощущается", value: `${Math.round(weather.temperature_feels_like)}°`, icon: "feels_like.png",
                 }, visibility: {
