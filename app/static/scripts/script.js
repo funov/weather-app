@@ -7,7 +7,7 @@ let store = {
     city: "Minsk",
     temperature: 0,
     weatherTime: "00:00 AM",
-    isDay: "yes",
+    timezone: 3600,
     description: "",
     iconId: '01',
     properties: {
@@ -23,14 +23,13 @@ const fetchData = async () => {
     try {
         const response = await fetch(`/api/v1.0/current/${store.city}`);
         let weather = await response.json();
-        let isDay = "yes";
 
         store = {
             ...store,
             city: weather.location,
             temperature: weather.temperature,
             weatherTime: weather.weather_time,
-            isDay,
+            timezone: weather.timezone,
             description: weather.description,
             iconId: weather.icon_id,
             properties: {
@@ -41,9 +40,9 @@ const fetchData = async () => {
                 }, pressure: {
                     title: "pressure", value: `${weather.pressure} %`, icon: "gauge.png",
                 }, feelsLike: {
-                    title: "feels like", value: `${weather.temperature_feels_like}`, icon: "uv-index.png",
+                    title: "feels like", value: `${weather.temperature_feels_like}°`, icon: "uv-index.png",
                 }, visibility: {
-                    title: "visibility", value: `${weather.visibility}%`, icon: "visibility.png",
+                    title: "visibility", value: `${(weather.visibility/1000).toFixed(1)} km`, icon: "visibility.png",
                 },
             },
         };
@@ -54,24 +53,6 @@ const fetchData = async () => {
     }
 };
 
-const getImage = (description) => {
-    const value = description.toLowerCase();
-
-    switch (value) {
-        case "partly cloudy":
-            return "partly.png";
-        case "cloud":
-            return "cloud.png";
-        case "fog":
-            return "fog.png";
-        case "sunny":
-            return "sunny.png";
-        case "cloud":
-            return "cloud.png";
-        default:
-            return "the.png";
-    }
-};
 
 const renderProperty = (properties) => {
     return Object.values(properties)
@@ -90,8 +71,11 @@ const renderProperty = (properties) => {
 };
 
 const markup = () => {
-    const {city, description, observationTime, temperature, isDay, properties} = store;
-    const containerClass = isDay === "yes" ? "is-day" : "";
+    const {city, description, weatherTime, temperature, timezone, properties, iconId} = store;
+
+    const localTime = new Date(weatherTime * 1000).toLocaleString().split(' ')[1];
+    let hours = new Date(new Date((weatherTime + timezone) * 1000).toISOString()).getUTCHours();
+    const containerClass = hours > 6 && hours < 20 ? "is-day" : "";
 
     return `<div class="container ${containerClass}">
             <div class="top">
@@ -103,12 +87,12 @@ const markup = () => {
               </div>
               <div class="city-info">
                 <div class="top-left">
-                <img class="icon" src="./app/static/img/${getImage(description)}" alt="" />
+                <img class="icon" src="./app/static/img/${iconId}" alt="" />
                 <div class="description">${description}</div>
               </div>
             
               <div class="top-right">
-                <div class="city-info__subtitle">as of ${observationTime}</div>
+                <div class="city-info__subtitle">as of ${localTime}</div>
                 <div class="city-info__title">${temperature}°</div>
               </div>
             </div>
