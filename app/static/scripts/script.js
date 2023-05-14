@@ -4,23 +4,14 @@ const textInput = document.getElementById("text-input");
 const form = document.getElementById("form");
 
 let store = {
-    city: "Minsk",
-    temperature: 0,
-    weatherTime: "00:00 AM",
-    timezone: 3600,
-    description: "",
-    iconId: '01',
-    properties: {
-        humidity: {},
-        windSpeed: {},
-        pressure: {},
-        feelsLike: {},
-        visibility: {},
+    city: "Minsk", temperature: 0, weatherTime: "00:00 AM", timezone: 3600, description: "", iconId: '01', properties: {
+        humidity: {}, windSpeed: {}, pressure: {}, feelsLike: {}, visibility: {},
     },
 };
 
 const fetchData = async () => {
     try {
+        root.innerHTML = "<img class=\"loader\" src=\"./app/static/images/loader.gif\" alt=\"loader\"/>"
         const response = await fetch(`/api/v1.0/current/${store.city}`);
 
         if (!response.ok) {
@@ -47,7 +38,7 @@ const fetchData = async () => {
                 }, feelsLike: {
                     title: "feels like", value: `${weather.temperature_feels_like}°`, icon: "feels_like.png",
                 }, visibility: {
-                    title: "visibility", value: `${(weather.visibility/1000).toFixed(1)} km`, icon: "visibility.png",
+                    title: "visibility", value: `${(weather.visibility / 1000).toFixed(1)} km`, icon: "visibility.png",
                 },
             },
         };
@@ -123,18 +114,18 @@ const handleInput = (e) => {
     };
 };
 
-const handleSubmit = (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
     const value = store.city;
 
     if (!value) return null;
 
     localStorage.setItem("query", value);
-    fetchData();
     togglePopupClass();
+    await fetchData();
 };
 
 form.addEventListener("submit", handleSubmit);
 textInput.addEventListener("input", handleInput);
 
-fetchData();
+fetchData().then();
