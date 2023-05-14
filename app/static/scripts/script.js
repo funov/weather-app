@@ -22,6 +22,11 @@ let store = {
 const fetchData = async () => {
     try {
         const response = await fetch(`/api/v1.0/current/${store.city}`);
+
+        if (!response.ok) {
+            // TODO json пустой в этом случае
+        }
+
         let weather = await response.json();
 
         store = {
@@ -40,7 +45,7 @@ const fetchData = async () => {
                 }, pressure: {
                     title: "pressure", value: `${weather.pressure} %`, icon: "gauge.png",
                 }, feelsLike: {
-                    title: "feels like", value: `${weather.temperature_feels_like}°`, icon: "uv-index.png",
+                    title: "feels like", value: `${weather.temperature_feels_like}°`, icon: "feels_like.png",
                 }, visibility: {
                     title: "visibility", value: `${(weather.visibility/1000).toFixed(1)} km`, icon: "visibility.png",
                 },
@@ -59,7 +64,7 @@ const renderProperty = (properties) => {
         .map(({title, value, icon}) => {
             return `<div class="property">
             <div class="property-icon">
-              <img src="./app/static/img/icons/${icon}" alt="">
+              <img src="./app/static/images/properties_icons/${icon}" alt="">
             </div>
             <div class="property-info">
               <div class="property-info__value">${value}</div>
@@ -87,7 +92,7 @@ const markup = () => {
               </div>
               <div class="city-info">
                 <div class="top-left">
-                <img class="icon" src="./app/static/img/${iconId}" alt="" />
+                <img class="icon" src="./app/static/images/weather_icons/${iconId}.png" alt="" />
                 <div class="description">${description}</div>
               </div>
             
