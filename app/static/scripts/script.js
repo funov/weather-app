@@ -43,7 +43,7 @@ const fetchData = async () => {
                 humidity: {
                     title: "влажность", value: `${weather.humidity} %`, icon: "humidity.png",
                 }, windSpeed: {
-                    title: "скорость ветра", value: `${weather.wind_speed} км/ч`, icon: "wind.png",
+                    title: "скорость ветра", value: `${weather.wind_speed} м/с`, icon: "wind.png",
                 }, pressure: {
                     title: "давление", value: `${Math.round(weather.pressure * 0.75)} мм рт.ст.`, icon: "gauge.png",
                 }, feelsLike: {
