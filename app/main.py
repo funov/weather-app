@@ -30,7 +30,7 @@ async def startup_event():
 
 @app.get("/")
 async def root(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse("new_index.html", {"request": request})
 
 
 @app.get("/api/v1.0/current/{location}")
