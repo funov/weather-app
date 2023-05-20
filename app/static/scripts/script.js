@@ -32,9 +32,14 @@ const getWeatherData = async (city, unit, hourlyOrWeek) => {
     )
         .then((response) => response.json())
         .then((weather) => {
-            console.log(weather)
-            temp.innerText = Math.round(weather.temperature);
-            currentLocation.innerText = weather.location;
+            if (unit === "c") {
+                temp.innerText = Math.round(weather.temperature);
+            } else {
+                console.log(unit);
+                console.log(celsiusToFahrenheit(weather.temperature));
+                temp.innerText = celsiusToFahrenheit(weather.temperature);
+            }
+            currentLocation.innerText = currentCity;
             description.innerText = weather.description;
 
             uvIndex.innerText = 3; // потом брать из weather
@@ -49,7 +54,7 @@ const getWeatherData = async (city, unit, hourlyOrWeek) => {
 
         })
         .catch((err) => {
-            alert("Предоставить доступ к геоданным");
+            alert(err);
         });
 }
 
@@ -108,6 +113,35 @@ function updateVisibilityStatus(visibility) {
         visibilityStatus.innerText = "Совершенно ясно";
     }
 }
+
+function changeUnit(unit) {
+    if (currentUnit !== unit) {
+        currentUnit = unit;
+        tempUnit.forEach((elem) => {
+            elem.innerText = `°${unit.toUpperCase()}`;
+        });
+        if (unit === "c") {
+            celsiusBtn.classList.add("active");
+            fahrenheitBtn.classList.remove("active");
+        } else {
+            celsiusBtn.classList.remove("active");
+            fahrenheitBtn.classList.add("active");
+        }
+        getWeatherData(currentCity, currentUnit, hourlyOrWeek);
+    }
+}
+
+function celsiusToFahrenheit(temp) {
+  return ((temp * 9) / 5 + 32).toFixed(1);
+}
+
+fahrenheitBtn.addEventListener("click", () => {
+  changeUnit("f");
+});
+
+celsiusBtn.addEventListener("click", () => {
+  changeUnit("c");
+});
 
 
 getPublicIp();
