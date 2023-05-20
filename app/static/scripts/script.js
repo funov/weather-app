@@ -76,18 +76,6 @@ const getWeatherData = async (city, unit, hourlyOrWeek) => {
 }
 
 
-
-const togglePopupClass = () => {
-    popup.classList.toggle("active");
-};
-
-const renderComponent = () => {
-    root.innerHTML = markup();
-
-    const city = document.getElementById("city");
-    city.addEventListener("click", togglePopupClass);
-};
-
 const handleInput = (e) => {
     store = {
         ...store, city: e.target.value,
