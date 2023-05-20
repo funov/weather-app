@@ -25,22 +25,6 @@ const temp = document.getElementById("temp"),
     weatherCards = document.querySelector("#weather-cards");
 
 
-let store = {
-    city: "Minsk",
-    temperature: 0,
-    weatherTime: "00:00 AM",
-    timezone: 3600,
-    description: "",
-    iconId: '01',
-    properties: {
-        humidity: {},
-        windSpeed: {},
-        pressure: {},
-        feelsLike: {},
-        visibility: {},
-    },
-};
-
 const getWeatherData = async (city, unit, hourlyOrWeek) => {
     fetch(`/api/v1.0/current/${store.city}`,
         {
