@@ -1,23 +1,18 @@
 const temp = document.getElementById("temp"),
     date = document.getElementById("date-time"),
     description = document.getElementById("description"),
-    rain = document.getElementById("rain"),
     mainIcon = document.getElementById("icon"),
     currentLocation = document.getElementById("location"),
     uvIndex = document.querySelector(".uv-index"),
     uvText = document.querySelector(".uv-text"),
     windSpeed = document.querySelector(".wind-speed"),
-    sunRise = document.querySelector(".sun-rise"),
-    sunSet = document.querySelector(".sun-set"),
     humidity = document.querySelector(".humidity"),
-    visibilty = document.querySelector(".visibilty"),
+    visibility = document.querySelector(".visibility"),
     humidityStatus = document.querySelector(".humidity-status"),
-    airQuality = document.querySelector(".air-quality"),
-    airQualityStatus = document.querySelector(".air-quality-status"),
-    visibilityStatus = document.querySelector(".visibilty-status"),
+    visibilityStatus = document.querySelector(".visibility-status"),
     searchForm = document.querySelector("#search"),
     search = document.querySelector("#query"),
-    celciusBtn = document.querySelector(".celcius"),
+    celsiusBtn = document.querySelector(".celsius"),
     fahrenheitBtn = document.querySelector(".fahrenheit"),
     tempUnit = document.querySelectorAll(".temp-unit"),
     hourlyBtn = document.querySelector(".hourly"),
@@ -26,7 +21,7 @@ const temp = document.getElementById("temp"),
 
 let currentCity = "";
 let currentUnit = "c";
-let hourlyorWeek = "week";
+let hourlyOrWeek = "week";
 
 const getWeatherData = async (city, unit, hourlyOrWeek) => {
     fetch(`/api/v1.0/current/${city}`,
@@ -35,42 +30,84 @@ const getWeatherData = async (city, unit, hourlyOrWeek) => {
             headers: {},
         }
     )
-    .then((response) => response.json())
-    .then((weather) => {
-      temp.innerText = Math.round(weather.temperature);
-      currentLocation.innerText = weather.location;
-      description.innerText = weather.description;
+        .then((response) => response.json())
+        .then((weather) => {
+            console.log(weather)
+            temp.innerText = Math.round(weather.temperature);
+            currentLocation.innerText = weather.location;
+            description.innerText = weather.description;
 
-      uvIndex.innerText = 3; // потом брать из weather
-      windSpeed.innerText = weather.wind_speed;
-      measureUvIndex(3); //?
-      mainIcon.src = getIcon(today.icon); //получение картинки
-      // changeBackground(today.icon);
-      humidity.innerText = weather.humidity + "%";
-      updateHumidityStatus(weather.humidity);
-      visibilty.innerText = (weather.visibility / 1000).toFixed(1);
-      updateVisibiltyStatus(visibilty.innerText); //?
+            uvIndex.innerText = 3; // потом брать из weather
+            windSpeed.innerText = `${weather.wind_speed} м/с`;
+            measureUvIndex(3);
+            // mainIcon.src = getIcon(today.icon); //получение картинки
+            // changeBackground(today.icon);
+            humidity.innerText = `${weather.humidity} %`;
+            updateHumidityStatus(weather.humidity);
+            visibility.innerText = `${(weather.visibility / 1000).toFixed(1)} км`;
+            updateVisibilityStatus(visibility.innerText); //?
 
-    })
-    .catch((err) => {
-      alert("Предоставить доступ к геоданным");
-    });
+        })
+        .catch((err) => {
+            alert("Предоставить доступ к геоданным");
+        });
 }
 
 
 function getPublicIp() {
-  fetch("https://geolocation-db.com/json/", {
-    method: "GET",
-    headers: {},
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      currentCity = data.city;
-      getWeatherData(data.city, currentUnit, hourlyorWeek);
+    fetch("https://geolocation-db.com/json/", {
+        method: "GET",
+        headers: {},
     })
-    .catch((err) => {
-      console.error(err);
-    });
+        .then((response) => response.json())
+        .then((data) => {
+            currentCity = data.city;
+            getWeatherData(data.city, currentUnit, hourlyOrWeek);
+        })
+        .catch((err) => {
+            console.error(err);
+        });
 }
+
+function updateHumidityStatus(humidity) {
+    if (humidity <= 30) {
+        humidityStatus.innerText = "Очень сухой воздух";
+    } else if (humidity < 55) {
+        humidityStatus.innerText = "Сухой воздух";
+    } else if (humidity < 70) {
+        humidityStatus.innerText = "Умеренно сухой воздух";
+    } else if (humidity < 85) {
+        humidityStatus.innerText = "Умеренно влажный воздух";
+    } else {
+        humidityStatus.innerText = "Очень влажный воздух";
+    }
+}
+
+function measureUvIndex(uvIndex) {
+    if (uvIndex <= 2) {
+        uvText.innerText = "Низкий";
+    } else if (uvIndex <= 5) {
+        uvText.innerText = "Умеренный";
+    } else if (uvIndex <= 7) {
+        uvText.innerText = "Высокий";
+    } else if (uvIndex <= 10) {
+        uvText.innerText = "Очень высокий";
+    } else {
+        uvText.innerText = "Крайне высокий";
+    }
+}
+
+function updateVisibilityStatus(visibility) {
+    if (visibility <= 0.5) {
+        visibilityStatus.innerText = "Густой туман";
+    } else if (visibility < 1) {
+        visibilityStatus.innerText = "Туман";
+    } else if (visibility < 10) {
+        visibilityStatus.innerText = "Дымка";
+    } else {
+        visibilityStatus.innerText = "Совершенно ясно";
+    }
+}
+
 
 getPublicIp();
