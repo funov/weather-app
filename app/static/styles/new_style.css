@@ -131,17 +131,17 @@ img {
   background: #e9ecef;
   margin: 20px 0;
 }
-.condition-rain {
+.description {
   font-size: 12px;
   text-transform: capitalize;
 }
-.condition-rain div {
+.description div {
   display: flex;
   align-items: center;
   gap: 10px;
   margin-bottom: 10px;
 }
-.condition-rain div i {
+.description div i {
   width: 20px;
 }
 .location {

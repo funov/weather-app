@@ -1,8 +1,29 @@
-const root = document.getElementById("root");
-const popup = document.getElementById("popup");
-const textInput = document.getElementById("text-input");
-const form = document.getElementById("form");
-const close = document.getElementById("close");
+const temp = document.getElementById("temp"),
+    date = document.getElementById("date-time"),
+    description = document.getElementById("description"),
+    rain = document.getElementById("rain"),
+    mainIcon = document.getElementById("icon"),
+    currentLocation = document.getElementById("location"),
+    uvIndex = document.querySelector(".uv-index"),
+    uvText = document.querySelector(".uv-text"),
+    windSpeed = document.querySelector(".wind-speed"),
+    sunRise = document.querySelector(".sun-rise"),
+    sunSet = document.querySelector(".sun-set"),
+    humidity = document.querySelector(".humidity"),
+    visibilty = document.querySelector(".visibilty"),
+    humidityStatus = document.querySelector(".humidity-status"),
+    airQuality = document.querySelector(".air-quality"),
+    airQualityStatus = document.querySelector(".air-quality-status"),
+    visibilityStatus = document.querySelector(".visibilty-status"),
+    searchForm = document.querySelector("#search"),
+    search = document.querySelector("#query"),
+    celciusBtn = document.querySelector(".celcius"),
+    fahrenheitBtn = document.querySelector(".fahrenheit"),
+    tempUnit = document.querySelectorAll(".temp-unit"),
+    hourlyBtn = document.querySelector(".hourly"),
+    weekBtn = document.querySelector(".week"),
+    weatherCards = document.querySelector("#weather-cards");
+
 
 let store = {
     city: "Minsk",
@@ -20,46 +41,39 @@ let store = {
     },
 };
 
-const fetchData = async () => {
-    try {
-        root.innerHTML = "<img class=\"loader\" src=\"./app/static/images/loader.gif\" alt=\"loader\"/>";
-        const response = await fetch(`/api/v1.0/current/${store.city}`);
-
-        if (!response.ok) {
-            alert("Потом будет работать🥺🥺🥺");
+const getWeatherData = async (city, unit, hourlyOrWeek) => {
+    fetch(`/api/v1.0/current/${store.city}`,
+        {
+            method: "GET",
+            headers: {},
         }
+    )
+    .then((response) => response.json())
+    .then((weather) => {
+      temp.innerText = Math.round(weather.temperature);
+      currentLocation.innerText = weather.location;
+      description.innerText = weather.description;
 
-        let weather = await response.json();
+      uvIndex.innerText = 3; // потом брать из weather
+      windSpeed.innerText = weather.wind_speed;
+      measureUvIndex(3); //?
+      mainIcon.src = getIcon(today.icon); //получение картинки
+      // changeBackground(today.icon);
+      humidity.innerText = weather.humidity + "%";
+      updateHumidityStatus(weather.humidity);
+      visibilty.innerText = (weather.visibility / 1000).toFixed(1);
+      updateVisibiltyStatus(visibilty.innerText); //?
 
-        store = {
-            ...store,
-            city: weather.location,
-            temperature: Math.round(weather.temperature),
-            weatherTime: weather.weather_time,
-            timezone: weather.timezone,
-            description: weather.description,
-            iconId: weather.icon_id,
-            properties: {
-                humidity: {
-                    title: "влажность", value: `${weather.humidity} %`, icon: "humidity.png",
-                }, windSpeed: {
-                    title: "скорость ветра", value: `${weather.wind_speed} м/с`, icon: "wind.png",
-                }, pressure: {
-                    title: "давление", value: `${Math.round(weather.pressure * 0.75)} мм рт.ст.`, icon: "gauge.png",
-                }, feelsLike: {
-                    title: "ощущается", value: `${Math.round(weather.temperature_feels_like)}°`, icon: "feels_like.png",
-                }, visibility: {
-                    title: "видимость", value: `${(weather.visibility / 1000).toFixed(1)} км`, icon: "visibility.png",
-                },
-            },
-        };
-
-        renderComponent();
-    } catch (err) {
-        console.log(err);
-    }
-};
-
+      if (hourlyOrWeek === "hourly") {
+        updateForecast(data.days[0].hours, unit, "day");
+      } else {
+        updateForecast(data.days, unit, "week");
+      }
+    })
+    .catch((err) => {
+      alert("City not found in our database");
+    });
+}
 
 const renderProperty = (properties) => {
     return Object.values(properties)
@@ -139,10 +153,10 @@ const handleSubmit = async (e) => {
 
     localStorage.setItem("query", value);
     togglePopupClass();
-    await fetchData();
+    await getWeatherData();
 };
 
 form.addEventListener("submit", handleSubmit);
 textInput.addEventListener("input", handleInput);
 close.addEventListener("click", handleClose);
-fetchData().then();
+getWeatherData().then();
