@@ -29,7 +29,7 @@ let currentUnit = "c";
 let hourlyorWeek = "week";
 
 const getWeatherData = async (city, unit, hourlyOrWeek) => {
-    fetch(`/api/v1.0/current/${store.city}`,
+    fetch(`/api/v1.0/current/${city}`,
         {
             method: "GET",
             headers: {},
@@ -51,40 +51,26 @@ const getWeatherData = async (city, unit, hourlyOrWeek) => {
       visibilty.innerText = (weather.visibility / 1000).toFixed(1);
       updateVisibiltyStatus(visibilty.innerText); //?
 
-      // if (hourlyOrWeek === "hourly") {
-      //   updateForecast(data.days[0].hours, unit, "day");
-      // } else {
-      //   updateForecast(data.days, unit, "week");
-      // }
     })
     .catch((err) => {
-      alert("City not found in our database");
+      alert("Предоставить доступ к геоданным");
     });
 }
 
 
-const handleInput = (e) => {
-    store = {
-        ...store, city: e.target.value,
-    };
-};
-
-const handleClose = () => {
-    popup.classList.toggle("active");
+function getPublicIp() {
+  fetch("https://geolocation-db.com/json/", {
+    method: "GET",
+    headers: {},
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      currentCity = data.city;
+      getWeatherData(data.city, currentUnit, hourlyorWeek);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
 }
 
-const handleSubmit = async (e) => {
-    e.preventDefault();
-    const value = store.city;
-
-    if (!value) return null;
-
-    localStorage.setItem("query", value);
-    togglePopupClass();
-    await getWeatherData();
-};
-
-form.addEventListener("submit", handleSubmit);
-textInput.addEventListener("input", handleInput);
-close.addEventListener("click", handleClose);
-getWeatherData().then();
+getPublicIp();
