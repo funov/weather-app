@@ -34,9 +34,31 @@ async def root(request: Request):
 
 
 @app.get("/api/v1.0/current/{location}")
-async def say_hello(location: str, lang: str = 'ru', units: str = 'metric'):
-    weather = await app.state.weather_client.get_current_weather(
+async def current_weather_by_location(
+        location: str,
+        lang: str = 'ru',
+        units: str = 'metric'):
+    weather = await app.state.weather_client.get_current_weather_by_location(
         location,
+        lang,
+        units
+    )
+
+    if len(weather.keys()) == 0:
+        raise HTTPException(status_code=404, detail="Weather not found")
+
+    return weather
+
+
+@app.get("/api/v1.0/current")
+async def current_weather_by_lat_lon(
+        lat: float,
+        lon: float,
+        lang: str = 'ru',
+        units: str = 'metric'):
+    weather = await app.state.weather_client.get_current_weather_by_lat_lon(
+        lat,
+        lon,
         lang,
         units
     )

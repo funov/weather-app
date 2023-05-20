@@ -1,5 +1,8 @@
 import httpx
 import logging
+
+from httpx import Response
+
 from app.weather_client.weather_api_urls import WeatherApiUrls
 
 
@@ -13,7 +16,7 @@ class WeatherClient:
         self.weather_api_urls = weather_api_urls
         self.logger = logger
 
-    async def get_current_weather(
+    async def get_current_weather_by_location(
             self,
             location: str,
             lang: str,
@@ -28,6 +31,28 @@ class WeatherClient:
                     'units': units
                 }
             )
+        return self._parse_weather(response)
+
+    async def get_current_weather_by_lat_lon(
+            self,
+            lat: int,
+            lon: int,
+            lang: str,
+            units: str) -> dict:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                self.weather_api_urls.get_current_weather_url,
+                params={
+                    'appid': self.weather_api_key,
+                    'lat': lat,
+                    'lon': lon,
+                    'lang': lang,
+                    'units': units
+                }
+            )
+        return self._parse_weather(response)
+
+    def _parse_weather(self, response: Response) -> dict:
         status_code = response.status_code
         url = response.url
         http_version = response.http_version
@@ -53,5 +78,8 @@ class WeatherClient:
             'timezone': response_json['timezone']
         }
 
-    async def get_five_days_weather(self) -> None:
+    async def get_five_days_weather_by_location(self) -> None:
+        raise NotImplementedError()
+
+    async def get_five_days_weather_by_coordinates(self) -> None:
         raise NotImplementedError()

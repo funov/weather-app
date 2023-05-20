@@ -5,7 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Document</title>
-
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=99c6fe68-fe8e-4f35-9d55-e063878aabb8&lang=ru_RU"
+            type="text/javascript"></script>
     <link href="{{ url_for('static', path='/styles/style.css') }}" rel="stylesheet">
 </head>
 <body>
@@ -39,6 +40,7 @@
             <span></span>
         </div>
     </div>
+    <div id="map" style="width: 600px; height: 400px"></div>
 </div>
 
 <script src="{{ url_for('static', path='/scripts/script.js') }}"></script>

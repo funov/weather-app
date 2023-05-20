@@ -248,3 +248,7 @@ img {
     row-gap: 20px;
     justify-content: space-between;
 }
+
+[class*="copyrights-pane"] {
+    display: none !important;
+}

@@ -29,3 +29,8 @@ GET http://127.0.0.1:80/api/v1.0/current/b
 Accept: application/json
 
 ###
+
+GET http://127.0.0.1:80/api/v1.0/current?lat=55.79251493712274&lon=37.622147216796854
+Accept: application/json
+
+###

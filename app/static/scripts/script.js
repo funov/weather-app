@@ -5,18 +5,8 @@ const form = document.getElementById("form");
 const close = document.getElementById("close");
 
 let store = {
-    city: "Minsk",
-    temperature: 0,
-    weatherTime: "00:00 AM",
-    timezone: 3600,
-    description: "",
-    iconId: '01',
-    properties: {
-        humidity: {},
-        windSpeed: {},
-        pressure: {},
-        feelsLike: {},
-        visibility: {},
+    city: "Minsk", temperature: 0, weatherTime: "00:00 AM", timezone: 3600, description: "", iconId: '01', properties: {
+        humidity: {}, windSpeed: {}, pressure: {}, feelsLike: {}, visibility: {},
     },
 };
 
@@ -30,35 +20,38 @@ const fetchData = async () => {
         }
 
         let weather = await response.json();
-
-        store = {
-            ...store,
-            city: weather.location,
-            temperature: Math.round(weather.temperature),
-            weatherTime: weather.weather_time,
-            timezone: weather.timezone,
-            description: weather.description,
-            iconId: weather.icon_id,
-            properties: {
-                humidity: {
-                    title: "влажность", value: `${weather.humidity} %`, icon: "humidity.png",
-                }, windSpeed: {
-                    title: "скорость ветра", value: `${weather.wind_speed} м/с`, icon: "wind.png",
-                }, pressure: {
-                    title: "давление", value: `${Math.round(weather.pressure * 0.75)} мм рт.ст.`, icon: "gauge.png",
-                }, feelsLike: {
-                    title: "ощущается", value: `${Math.round(weather.temperature_feels_like)}°`, icon: "feels_like.png",
-                }, visibility: {
-                    title: "видимость", value: `${(weather.visibility / 1000).toFixed(1)} км`, icon: "visibility.png",
-                },
-            },
-        };
-
-        renderComponent();
+        handle_weather(weather);
     } catch (err) {
         console.log(err);
     }
 };
+
+const handle_weather = (weatherJson) => {
+    store = {
+        ...store,
+        city: weatherJson.location,
+        temperature: Math.round(weatherJson.temperature),
+        weatherTime: weatherJson.weather_time,
+        timezone: weatherJson.timezone,
+        description: weatherJson.description,
+        iconId: weatherJson.icon_id,
+        properties: {
+            humidity: {
+                title: "влажность", value: `${weatherJson.humidity} %`, icon: "humidity.png",
+            }, windSpeed: {
+                title: "скорость ветра", value: `${weatherJson.wind_speed} м/с`, icon: "wind.png",
+            }, pressure: {
+                title: "давление", value: `${Math.round(weatherJson.pressure * 0.75)} мм рт.ст.`, icon: "gauge.png",
+            }, feelsLike: {
+                title: "ощущается", value: `${Math.round(weatherJson.temperature_feels_like)}°`, icon: "feels_like.png",
+            }, visibility: {
+                title: "видимость", value: `${(weatherJson.visibility / 1000).toFixed(1)} км`, icon: "visibility.png",
+            },
+        },
+    };
+
+    renderComponent();
+}
 
 
 const renderProperty = (properties) => {
@@ -146,3 +139,61 @@ form.addEventListener("submit", handleSubmit);
 textInput.addEventListener("input", handleInput);
 close.addEventListener("click", handleClose);
 fetchData().then();
+
+ymaps.ready(init);
+let myMap, myPlacemark;
+
+function init() {
+    myMap = new ymaps.Map("map", {
+        center: [55.76, 37.64], zoom: 4
+    }, {
+        searchControlProvider: 'yandex#search', restrictMapArea: [[85, -179], [-85, 180]]
+    });
+
+    myMap.cursors.push('pointer');
+
+    myMap.events.add('click', async function (e) {
+        let coords = e.get('coords');
+
+        if (myPlacemark) {
+            myPlacemark.geometry.setCoordinates(coords);
+        } else {
+            myPlacemark = createPlacemark(coords);
+            myMap.geoObjects.add(myPlacemark);
+            myPlacemark.events.add('dragend', function () {
+                updatePlacemarkCoords(myPlacemark);
+            });
+        }
+        updatePlacemarkCoords(myPlacemark);
+
+        const response = await fetch(`/api/v1.0/current?lat=${coords[0]}&lon=${coords[1]}`);
+
+        if (!response.ok) {
+            alert("Потом будет работать🥺🥺🥺");
+        }
+
+        let weather = await response.json();
+        handle_weather(weather);
+    });
+
+    myMap.controls.remove('geolocationControl');
+    myMap.controls.remove('searchControl');
+    myMap.controls.remove('trafficControl');
+    myMap.controls.remove('typeSelector');
+    myMap.controls.remove('fullscreenControl');
+    myMap.controls.remove('zoomControl');
+    myMap.controls.remove('rulerControl');
+}
+
+function createPlacemark(coords) {
+    return new ymaps.Placemark(coords, {
+        hintContent: 'Метка', balloonContent: 'Координаты метки: '
+    }, {
+        draggable: false
+    });
+}
+
+function updatePlacemarkCoords(placemark) {
+    let coords = placemark.geometry.getCoordinates();
+    placemark.properties.set('balloonContent', 'Координаты метки: ' + [coords[0].toPrecision(6), coords[1].toPrecision(6)].join(', '));
+}
