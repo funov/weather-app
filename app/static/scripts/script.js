@@ -24,6 +24,9 @@ const temp = document.getElementById("temp"),
     weekBtn = document.querySelector(".week"),
     weatherCards = document.querySelector("#weather-cards");
 
+let currentCity = "";
+let currentUnit = "c";
+let hourlyorWeek = "week";
 
 const getWeatherData = async (city, unit, hourlyOrWeek) => {
     fetch(`/api/v1.0/current/${store.city}`,
@@ -48,11 +51,11 @@ const getWeatherData = async (city, unit, hourlyOrWeek) => {
       visibilty.innerText = (weather.visibility / 1000).toFixed(1);
       updateVisibiltyStatus(visibilty.innerText); //?
 
-      if (hourlyOrWeek === "hourly") {
-        updateForecast(data.days[0].hours, unit, "day");
-      } else {
-        updateForecast(data.days, unit, "week");
-      }
+      // if (hourlyOrWeek === "hourly") {
+      //   updateForecast(data.days[0].hours, unit, "day");
+      // } else {
+      //   updateForecast(data.days, unit, "week");
+      // }
     })
     .catch((err) => {
       alert("City not found in our database");
