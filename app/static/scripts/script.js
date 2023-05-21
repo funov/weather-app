@@ -24,38 +24,79 @@ let currentUnit = "c";
 let hourlyOrWeek = "week";
 
 const getWeatherData = async (city, unit, hourlyOrWeek) => {
-    fetch(`/api/v1.0/current/${city}`,
+    fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&key=EJ6UBL2JEQGYB3AA4ENASN62J&contentType=json`,
         {
-            method: "GET",
-            headers: {},
-        }
-    )
+        method: "GET",
+        headers: {},
+    })
         .then((response) => response.json())
-        .then((weather) => {
+        .then((data) => {
+            let weather = data.currentConditions;
             if (unit === "c") {
-                temp.innerText = Math.round(weather.temperature);
+                temp.innerText = Math.round(weather.temp);
             } else {
-                console.log(unit);
-                console.log(celsiusToFahrenheit(weather.temperature));
-                temp.innerText = celsiusToFahrenheit(weather.temperature);
+                temp.innerText = celsiusToFahrenheit(weather.temp);
             }
-            currentLocation.innerText = currentCity;
-            description.innerText = weather.description;
+            currentLocation.innerText = data.resolvedAddress;
+            description.innerText = weather.conditions;
 
-            uvIndex.innerText = 3; // потом брать из weather
-            windSpeed.innerText = `${weather.wind_speed} м/с`;
-            measureUvIndex(3);
+            uvIndex.innerText = weather.uvindex;
+            windSpeed.innerText = `${Math.round(weather.windspeed / 3.6)} м/с`;
+            measureUvIndex(weather.uvindex);
             // mainIcon.src = getIcon(today.icon); //получение картинки
             // changeBackground(today.icon);
             humidity.innerText = `${weather.humidity} %`;
             updateHumidityStatus(weather.humidity);
-            visibility.innerText = `${(weather.visibility / 1000).toFixed(1)} км`;
-            updateVisibilityStatus(visibility.innerText); //?
-
+            visibility.innerText = `${weather.visibility} км`;
+            updateVisibilityStatus(visibility.innerText);
+            if (hourlyOrWeek === "hourly") {
+                updateForecast(data.days[0].hours, unit, "day");
+            } else {
+                updateForecast(data.days, unit, "week");
+            }
         })
         .catch((err) => {
             alert(err);
         });
+}
+
+function updateForecast(data, unit, type) {
+    weatherCards.innerHTML = "";
+    let day = 0;
+    let numCards = 0;
+    if (type === "day") {
+        numCards = 24;
+    } else {
+        numCards = 7;
+    }
+    for (let i = 0; i < numCards; i++) {
+        let card = document.createElement("div");
+        card.classList.add("card");
+        let dayName = getHour(data[day].datetime);
+        if (type === "week") {
+            dayName = getDayName(data[day].datetime);
+        }
+        let dayTemp = Math.round(data[day].temp);
+        if (unit === "f") {
+            dayTemp = celsiusToFahrenheit(data[day].temp);
+        }
+        // let iconCondition = data[day].icon;
+        // let iconSrc = getIcon(iconCondition);
+        let tempUnit = "°C";
+        if (unit === "f") {
+            tempUnit = "°F";
+        }
+        card.innerHTML = `
+                <h2 class="day-name">${dayName}</h2>
+            <div class="card-icon">
+            </div>
+            <div class="day-temp">
+              <h2 class="temp">${dayTemp}</h2>
+              <span class="temp-unit">${tempUnit}</span>
+            </div>`;
+        weatherCards.appendChild(card);
+        day++;
+    }
 }
 
 
@@ -114,6 +155,31 @@ function updateVisibilityStatus(visibility) {
     }
 }
 
+function getHour(time) {
+    let hour = time.split(":")[0];
+    let min = time.split(":")[1];
+    if (hour > 12) {
+        hour = hour - 12;
+        return `${hour}:${min} PM`;
+    } else {
+        return `${hour}:${min} AM`;
+    }
+}
+
+function getDayName(date) {
+    let day = new Date(date);
+    let days = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+    ];
+    return days[day.getDay()];
+}
+
 function changeUnit(unit) {
     if (currentUnit !== unit) {
         currentUnit = unit;
@@ -131,17 +197,40 @@ function changeUnit(unit) {
     }
 }
 
+function changeHourlyOrWeek(unit) {
+    if (hourlyOrWeek !== unit) {
+        hourlyOrWeek = unit;
+        if (unit === "hourly") {
+            hourlyBtn.classList.add("active");
+            weekBtn.classList.remove("active");
+        } else {
+            hourlyBtn.classList.remove("active");
+            weekBtn.classList.add("active");
+        }
+        getWeatherData(currentCity, currentUnit, hourlyOrWeek);
+    }
+}
+
 function celsiusToFahrenheit(temp) {
-  return ((temp * 9) / 5 + 32).toFixed(1);
+    return ((temp * 9) / 5 + 32).toFixed(1);
 }
 
 fahrenheitBtn.addEventListener("click", () => {
-  changeUnit("f");
+    changeUnit("f");
 });
 
 celsiusBtn.addEventListener("click", () => {
-  changeUnit("c");
+    changeUnit("c");
 });
+
+hourlyBtn.addEventListener("click", () => {
+    changeHourlyOrWeek("hourly");
+});
+
+weekBtn.addEventListener("click", () => {
+    changeHourlyOrWeek("week");
+});
+
 
 
 getPublicIp();
