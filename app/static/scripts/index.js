@@ -1,49 +1,48 @@
-import {statusUpdater} from './StatusUpdater.js';
-import {DocumentElements} from './DocumentElements';
+import {StatusUpdater} from './StatusUpdater.js';
+import {DocumentElements} from './DocumentElements.js';
 
+const documentElements = new DocumentElements();
 let currentCity = "";
 let currentUnit = "c";
 let hourlyOrWeek = "week";
 
-const getWeatherData = async (city, unit, hourlyOrWeek) => {
+const changeWeatherData = async (city, unit, hourlyOrWeek) => {
     fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&key=EJ6UBL2JEQGYB3AA4ENASN62J&contentType=json`,
         {
-        method: "GET",
-        headers: {},
-    })
+            method: "GET",
+            headers: {},
+        })
         .then((response) => response.json())
         .then((data) => {
             let weather = data.currentConditions;
-            if (unit === "c") {
-                DocumentElements.temp.innerText = Math.round(weather.temp);
-            } else {
-                DocumentElements.temp.innerText = celsiusToFahrenheit(weather.temp);
-            }
-            DocumentElements.currentLocation.innerText = data.resolvedAddress;
-            DocumentElements.description.innerText = weather.conditions;
-
-            DocumentElements.uvIndex.innerText = weather.uvindex;
-            DocumentElements.windSpeed.innerText = `${Math.round(weather.windspeed / 3.6)} м/с`;
-
-            // mainIcon.src = getIcon(today.icon); //получение картинки
-            // changeBackground(today.icon);
-            DocumentElements.humidity.innerText = `${weather.humidity} %`;
-
-            DocumentElements.visibility.innerText = `${weather.visibility} км`;
+            changeSidebarData(data, weather, unit);
+            changeMediumCardText(weather, unit, hourlyOrWeek)
             updateMediumCardStatus();
             if (hourlyOrWeek === "hourly") {
                 updateForecast(data.days[0].hours, unit, "day");
             } else {
                 updateForecast(data.days, unit, "week");
             }
+            // changeBackground(today.icon);
         })
         .catch((err) => {
             alert(err);
         });
 }
 
+function changeSidebarData(data, weather, unit) {
+    documentElements.currentLocation.innerText = data.resolvedAddress;
+    documentElements.description.innerText = weather.conditions;
+    if (unit === "c") {
+        documentElements.temp.innerText = Math.round(weather.temp);
+    } else {
+        documentElements.temp.innerText = celsiusToFahrenheit(weather.temp);
+    }
+    // mainIcon.src = getIcon(today.icon); //получение картинки
+}
+
 function updateForecast(data, unit, type) {
-    weatherCards.innerHTML = "";
+    documentElements.weatherCards.innerHTML = "";
     let day = 0;
     let numCards = 0;
     if (type === "day") {
@@ -76,7 +75,7 @@ function updateForecast(data, unit, type) {
               <h2 class="temp">${dayTemp}</h2>
               <span class="temp-unit">${tempUnit}</span>
             </div>`;
-        weatherCards.appendChild(card);
+        documentElements.weatherCards.appendChild(card);
         day++;
     }
 }
@@ -90,18 +89,25 @@ function getPublicIp() {
         .then((response) => response.json())
         .then((data) => {
             currentCity = data.city;
-            getWeatherData(data.city, currentUnit, hourlyOrWeek);
+            changeWeatherData(data.city, currentUnit, hourlyOrWeek);
         })
         .catch((err) => {
             console.error(err);
         });
 }
 
-function updateMediumCardStatus(){
-   let statusUpdater = new statusUpdater();
-   statusUpdater.updateVisibility(DocumentElements.visibility.innerText);
-   statusUpdater.updateHumidity(DocumentElements.humidity);
-   statusUpdater.updateUvIndex(DocumentElements.uvIndex);
+function changeMediumCardText(weather, unit, hourlyOrWeek) {
+    documentElements.uvIndex.innerText = weather.uvindex;
+    documentElements.windSpeed.innerText = `${Math.round(weather.windspeed / 3.6)} м/с`;
+    documentElements.humidity.innerText = `${weather.humidity} %`;
+    documentElements.visibility.innerText = `${weather.visibility} км`;
+}
+
+function updateMediumCardStatus() {
+    let statusUpdater = new StatusUpdater();
+    statusUpdater.updateVisibility(documentElements.visibility.innerText);
+    statusUpdater.updateHumidity(documentElements.humidity);
+    statusUpdater.updateUvIndex(documentElements.uvIndex);
 }
 
 
@@ -133,17 +139,17 @@ function getDayName(date) {
 function changeUnit(unit) {
     if (currentUnit !== unit) {
         currentUnit = unit;
-        tempUnit.forEach((elem) => {
+        documentElements.tempUnit.forEach((elem) => {
             elem.innerText = `°${unit.toUpperCase()}`;
         });
         if (unit === "c") {
-            celsiusBtn.classList.add("active");
-            fahrenheitBtn.classList.remove("active");
+            documentElements.celsiusBtn.classList.add("active");
+            documentElements.fahrenheitBtn.classList.remove("active");
         } else {
-            celsiusBtn.classList.remove("active");
-            fahrenheitBtn.classList.add("active");
+            documentElements.celsiusBtn.classList.remove("active");
+            documentElements.fahrenheitBtn.classList.add("active");
         }
-        getWeatherData(currentCity, currentUnit, hourlyOrWeek);
+        changeWeatherData(currentCity, currentUnit, hourlyOrWeek);
     }
 }
 
@@ -151,13 +157,13 @@ function changeHourlyOrWeek(unit) {
     if (hourlyOrWeek !== unit) {
         hourlyOrWeek = unit;
         if (unit === "hourly") {
-            hourlyBtn.classList.add("active");
-            weekBtn.classList.remove("active");
+            documentElements.hourlyBtn.classList.add("active");
+            documentElements.weekBtn.classList.remove("active");
         } else {
-            hourlyBtn.classList.remove("active");
-            weekBtn.classList.add("active");
+            documentElements.hourlyBtn.classList.remove("active");
+            documentElements.weekBtn.classList.add("active");
         }
-        getWeatherData(currentCity, currentUnit, hourlyOrWeek);
+        changeWeatherData(currentCity, currentUnit, hourlyOrWeek);
     }
 }
 
@@ -165,22 +171,21 @@ function celsiusToFahrenheit(temp) {
     return ((temp * 9) / 5 + 32).toFixed(1);
 }
 
-fahrenheitBtn.addEventListener("click", () => {
+documentElements.fahrenheitBtn.addEventListener("click", () => {
     changeUnit("f");
 });
 
-celsiusBtn.addEventListener("click", () => {
+documentElements.celsiusBtn.addEventListener("click", () => {
     changeUnit("c");
 });
 
-hourlyBtn.addEventListener("click", () => {
+documentElements.hourlyBtn.addEventListener("click", () => {
     changeHourlyOrWeek("hourly");
 });
 
-weekBtn.addEventListener("click", () => {
+documentElements.weekBtn.addEventListener("click", () => {
     changeHourlyOrWeek("week");
 });
-
 
 
 getPublicIp();
