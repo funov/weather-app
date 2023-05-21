@@ -1,23 +1,5 @@
-const temp = document.getElementById("temp"),
-    date = document.getElementById("date-time"),
-    description = document.getElementById("description"),
-    mainIcon = document.getElementById("icon"),
-    currentLocation = document.getElementById("location"),
-    uvIndex = document.querySelector(".uv-index"),
-    uvText = document.querySelector(".uv-text"),
-    windSpeed = document.querySelector(".wind-speed"),
-    humidity = document.querySelector(".humidity"),
-    visibility = document.querySelector(".visibility"),
-    humidityStatus = document.querySelector(".humidity-status"),
-    visibilityStatus = document.querySelector(".visibility-status"),
-    searchForm = document.querySelector("#search"),
-    search = document.querySelector("#query"),
-    celsiusBtn = document.querySelector(".celsius"),
-    fahrenheitBtn = document.querySelector(".fahrenheit"),
-    tempUnit = document.querySelectorAll(".temp-unit"),
-    hourlyBtn = document.querySelector(".hourly"),
-    weekBtn = document.querySelector(".week"),
-    weatherCards = document.querySelector("#weather-cards");
+import {statusUpdater} from './StatusUpdater.js';
+import {DocumentElements} from './DocumentElements';
 
 let currentCity = "";
 let currentUnit = "c";
@@ -33,22 +15,22 @@ const getWeatherData = async (city, unit, hourlyOrWeek) => {
         .then((data) => {
             let weather = data.currentConditions;
             if (unit === "c") {
-                temp.innerText = Math.round(weather.temp);
+                DocumentElements.temp.innerText = Math.round(weather.temp);
             } else {
-                temp.innerText = celsiusToFahrenheit(weather.temp);
+                DocumentElements.temp.innerText = celsiusToFahrenheit(weather.temp);
             }
-            currentLocation.innerText = data.resolvedAddress;
-            description.innerText = weather.conditions;
+            DocumentElements.currentLocation.innerText = data.resolvedAddress;
+            DocumentElements.description.innerText = weather.conditions;
 
-            uvIndex.innerText = weather.uvindex;
-            windSpeed.innerText = `${Math.round(weather.windspeed / 3.6)} м/с`;
-            measureUvIndex(weather.uvindex);
+            DocumentElements.uvIndex.innerText = weather.uvindex;
+            DocumentElements.windSpeed.innerText = `${Math.round(weather.windspeed / 3.6)} м/с`;
+
             // mainIcon.src = getIcon(today.icon); //получение картинки
             // changeBackground(today.icon);
-            humidity.innerText = `${weather.humidity} %`;
-            updateHumidityStatus(weather.humidity);
-            visibility.innerText = `${weather.visibility} км`;
-            updateVisibilityStatus(visibility.innerText);
+            DocumentElements.humidity.innerText = `${weather.humidity} %`;
+
+            DocumentElements.visibility.innerText = `${weather.visibility} км`;
+            updateMediumCardStatus();
             if (hourlyOrWeek === "hourly") {
                 updateForecast(data.days[0].hours, unit, "day");
             } else {
@@ -115,45 +97,13 @@ function getPublicIp() {
         });
 }
 
-function updateHumidityStatus(humidity) {
-    if (humidity <= 30) {
-        humidityStatus.innerText = "Очень сухой воздух";
-    } else if (humidity < 55) {
-        humidityStatus.innerText = "Сухой воздух";
-    } else if (humidity < 70) {
-        humidityStatus.innerText = "Умеренно сухой воздух";
-    } else if (humidity < 85) {
-        humidityStatus.innerText = "Умеренно влажный воздух";
-    } else {
-        humidityStatus.innerText = "Очень влажный воздух";
-    }
+function updateMediumCardStatus(){
+   let statusUpdater = new statusUpdater();
+   statusUpdater.updateVisibility(DocumentElements.visibility.innerText);
+   statusUpdater.updateHumidity(DocumentElements.humidity);
+   statusUpdater.updateUvIndex(DocumentElements.uvIndex);
 }
 
-function measureUvIndex(uvIndex) {
-    if (uvIndex <= 2) {
-        uvText.innerText = "Низкий";
-    } else if (uvIndex <= 5) {
-        uvText.innerText = "Умеренный";
-    } else if (uvIndex <= 7) {
-        uvText.innerText = "Высокий";
-    } else if (uvIndex <= 10) {
-        uvText.innerText = "Очень высокий";
-    } else {
-        uvText.innerText = "Крайне высокий";
-    }
-}
-
-function updateVisibilityStatus(visibility) {
-    if (visibility <= 0.5) {
-        visibilityStatus.innerText = "Густой туман";
-    } else if (visibility < 1) {
-        visibilityStatus.innerText = "Туман";
-    } else if (visibility < 10) {
-        visibilityStatus.innerText = "Дымка";
-    } else {
-        visibilityStatus.innerText = "Совершенно ясно";
-    }
-}
 
 function getHour(time) {
     let hour = time.split(":")[0];

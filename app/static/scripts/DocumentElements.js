@@ -1,0 +1,22 @@
+export class DocumentElements {
+    static temp = document.getElementById("temp");
+    static date = document.getElementById("date-time");
+    static description = document.getElementById("description");
+    static mainIcon = document.getElementById("icon");
+    static currentLocation = document.getElementById("location");
+    static uvIndex = document.querySelector(".uv-index");
+    static uvText = document.querySelector(".uv-text");
+    static windSpeed = document.querySelector(".wind-speed");
+    static humidity = document.querySelector(".humidity");
+    static visibility = document.querySelector(".visibility");
+    static humidityStatus = document.querySelector(".humidity-status");
+    static visibilityStatus = document.querySelector(".visibility-status");
+    static searchForm = document.querySelector("#search");
+    static search = document.querySelector("#query");
+    static celsiusBtn = document.querySelector(".celsius");
+    static fahrenheitBtn = document.querySelector(".fahrenheit");
+    static tempUnit = document.querySelectorAll(".temp-unit");
+    static hourlyBtn = document.querySelector(".hourly");
+    static weekBtn = document.querySelector(".week");
+    static weatherCards = document.querySelector("#weather-cards");
+}
