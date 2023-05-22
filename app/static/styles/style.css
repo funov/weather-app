@@ -126,11 +126,15 @@ img {
   display: block;
 }
 .divider {
+  display: flex;
   width: 100%;
   height: 1px;
   background: #e9ecef;
   margin: 20px 0;
 }
+.city-sidebar-card{
+}
+
 .description {
   font-size: 12px;
   text-transform: capitalize;
@@ -148,9 +152,9 @@ img {
   display: flex;
   align-items: center;
   font-size: 14px;
-  gap: 10px;
   margin-top: 10px;
 }
+
 .main {
   width: 100%;
   min-width: 400px;
@@ -301,6 +305,31 @@ img {
   display: flex;
   flex-direction: column;
   margin-top: 50px;
+}
+
+.large-card .card-heading {
+  color: #c2c2c2;
+}
+
+.sidebar-card  {
+  opacity: 0.75;
+  width: 100%;
+  height: 60px;
+  border-radius: 5px;
+  color: #1a1a1a;
+  background-color: rgba(255, 255, 255, 0.48);
+  padding: 10px 20px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.sidebar-card  #city{
+
+}
+
+.sidebar-card  #temp{
+    text-align: right;
 }
 
 .break-column {

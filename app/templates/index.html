@@ -13,10 +13,11 @@
     <div class="sidebar">
         <div>
             <form class="search" id="search">
-                <input type="text" id="query" placeholder="Поиск..."/>
-                <button id="search-button"><img
-                        src="{{ url_for('static', path='/icons/lupa.png') }}"
-                        alt=""></button>
+            <input type="text" id="query" placeholder="Поиск..."/>
+            <button id="search-button"><img
+                    src="{{ url_for('static', path='/icons/lupa.png') }}"
+                    alt="">
+            </button>
             </form>
             <div class="weather-icon">
                 <img src="{{ url_for('static', path='/icons/sun/4.png') }}"
@@ -33,6 +34,15 @@
             <div class="description">
                 <i class="fas fa-cloud"></i>
                 <p id="description">condition</p>
+            </div>
+            <div class="sidebar-card">
+                <p id="city">Москва</p>
+            </div>
+            <div class="sidebar-card">
+                <p id="city">Санкт-Петербург</p>
+            </div>
+            <div class="sidebar-card">
+                <p id="city">Екатеринбург</p>
             </div>
         </div>
         <div class="location">
@@ -91,12 +101,12 @@
             </div>
             <div class="large-card">
                 <h4 class="card-heading">Карты</h4>
-                <div class="content">
-                </div>
+                <div class="content"></div>
             </div>
         </div>
     </div>
 </div>
-<script type="module" src="{{ url_for('static', path='/scripts/index.js') }}"></script>
+<script type="module"
+        src="{{ url_for('static', path='/scripts/index.js') }}"></script>
 </body>
 </html>

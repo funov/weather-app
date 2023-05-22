@@ -1,10 +1,10 @@
 import {StatusUpdater} from './StatusUpdater.js';
 import {DocumentElements} from './DocumentElements.js';
 
-const documentElements = new DocumentElements();
 let currentCity = "";
 let currentUnit = "c";
 let hourlyOrWeek = "week";
+const documentElements = new DocumentElements();
 
 const changeWeatherData = async (city, unit, hourlyOrWeek) => {
     fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&key=EJ6UBL2JEQGYB3AA4ENASN62J&contentType=json`,
@@ -16,7 +16,7 @@ const changeWeatherData = async (city, unit, hourlyOrWeek) => {
         .then((data) => {
             let weather = data.currentConditions;
             changeSidebarData(data, weather, unit);
-            changeMediumCardText(weather, unit, hourlyOrWeek)
+            changeMediumCardText(weather)
             updateMediumCardStatus();
             if (hourlyOrWeek === "hourly") {
                 updateForecast(data.days[0].hours, unit, "day");
@@ -38,7 +38,7 @@ function changeSidebarData(data, weather, unit) {
     } else {
         documentElements.temp.innerText = celsiusToFahrenheit(weather.temp);
     }
-    // mainIcon.src = getIcon(today.icon); //получение картинки
+    documentElements.mainIcon.src = getIcon(weather.icon); //получение картинки
 }
 
 function updateForecast(data, unit, type) {
@@ -61,8 +61,8 @@ function updateForecast(data, unit, type) {
         if (unit === "f") {
             dayTemp = celsiusToFahrenheit(data[day].temp);
         }
-        // let iconCondition = data[day].icon;
-        // let iconSrc = getIcon(iconCondition);
+        let iconCondition = data[day].icon;
+        let iconSrc = getIcon(iconCondition);
         let tempUnit = "°C";
         if (unit === "f") {
             tempUnit = "°F";
@@ -70,6 +70,7 @@ function updateForecast(data, unit, type) {
         card.innerHTML = `
                 <h2 class="day-name">${dayName}</h2>
             <div class="card-icon">
+                <img src="${iconSrc}" class="day-icon" alt="" />
             </div>
             <div class="day-temp">
               <h2 class="temp">${dayTemp}</h2>
@@ -89,6 +90,8 @@ function getPublicIp() {
         .then((response) => response.json())
         .then((data) => {
             currentCity = data.city;
+            console.log(currentCity);
+            console.log(data);
             changeWeatherData(data.city, currentUnit, hourlyOrWeek);
         })
         .catch((err) => {
@@ -96,7 +99,7 @@ function getPublicIp() {
         });
 }
 
-function changeMediumCardText(weather, unit, hourlyOrWeek) {
+function changeMediumCardText(weather) {
     documentElements.uvIndex.innerText = weather.uvindex;
     documentElements.windSpeed.innerText = `${Math.round(weather.windspeed / 3.6)} м/с`;
     documentElements.humidity.innerText = `${weather.humidity} %`;
@@ -105,7 +108,7 @@ function changeMediumCardText(weather, unit, hourlyOrWeek) {
 
 function updateMediumCardStatus() {
     let statusUpdater = new StatusUpdater();
-    statusUpdater.updateVisibility(documentElements.visibility.innerText);
+    statusUpdater.updateVisibility(documentElements.visibility);
     statusUpdater.updateHumidity(documentElements.humidity);
     statusUpdater.updateUvIndex(documentElements.uvIndex);
 }
@@ -114,24 +117,20 @@ function updateMediumCardStatus() {
 function getHour(time) {
     let hour = time.split(":")[0];
     let min = time.split(":")[1];
-    if (hour > 12) {
-        hour = hour - 12;
-        return `${hour}:${min} PM`;
-    } else {
-        return `${hour}:${min} AM`;
-    }
+
+    return `${hour}:${min}`;
 }
 
 function getDayName(date) {
     let day = new Date(date);
     let days = [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
+        "Воскресенье",
+        "Понедельник",
+        "Вторник",
+        "Среда",
+        "Четверг",
+        "Пятница",
+        "Суббота",
     ];
     return days[day.getDay()];
 }
@@ -166,6 +165,23 @@ function changeHourlyOrWeek(unit) {
         changeWeatherData(currentCity, currentUnit, hourlyOrWeek);
     }
 }
+
+function getIcon(condition) {
+    if (condition === "partly-cloudy-day") {
+        return "https://i.ibb.co/PZQXH8V/27.png";
+    } else if (condition === "partly-cloudy-night") {
+        return "https://i.ibb.co/Kzkk59k/15.png";
+    } else if (condition === "rain") {
+        return "https://i.ibb.co/kBd2NTS/39.png";
+    } else if (condition === "clear-day") {
+        return "https://i.ibb.co/rb4rrJL/26.png";
+    } else if (condition === "clear-night") {
+        return "https://i.ibb.co/1nxNGHL/10.png";
+    } else {
+        return "https://i.ibb.co/rb4rrJL/26.png";
+    }
+}
+
 
 function celsiusToFahrenheit(temp) {
     return ((temp * 9) / 5 + 32).toFixed(1);
