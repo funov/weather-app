@@ -6,6 +6,7 @@ let currentUnit = "c";
 let hourlyOrWeek = "week";
 const documentElements = new DocumentElements();
 
+
 const changeWeatherData = async (city, unit, hourlyOrWeek) => {
     fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&key=EJ6UBL2JEQGYB3AA4ENASN62J&contentType=json`,
         {
@@ -15,9 +16,8 @@ const changeWeatherData = async (city, unit, hourlyOrWeek) => {
         .then((response) => response.json())
         .then((data) => {
             let weather = data.currentConditions;
-            changeSidebarData(data, weather, unit);
-            changeMediumCardText(weather)
-            updateMediumCardStatus();
+            updateSidebarData(data, weather, unit);
+            updateMediumCardData(weather)
             if (hourlyOrWeek === "hourly") {
                 updateForecast(data.days[0].hours, unit, "day");
             } else {
@@ -30,7 +30,7 @@ const changeWeatherData = async (city, unit, hourlyOrWeek) => {
         });
 }
 
-function changeSidebarData(data, weather, unit) {
+function updateSidebarData(data, weather, unit) {
     documentElements.currentLocation.innerText = data.resolvedAddress;
     documentElements.description.innerText = weather.conditions;
     if (unit === "c") {
@@ -83,36 +83,30 @@ function updateForecast(data, unit, type) {
 
 
 function getPublicIp() {
-    fetch("https://geolocation-db.com/json/", {
-        method: "GET",
-        headers: {},
+  fetch("https://geolocation-db.com/json/", {
+    method: "GET",
+    headers: {},
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      currentCity = data.city;
+      changeWeatherData(data.city, currentUnit, hourlyOrWeek);
     })
-        .then((response) => response.json())
-        .then((data) => {
-            currentCity = data.city;
-            console.log(currentCity);
-            console.log(data);
-            changeWeatherData(data.city, currentUnit, hourlyOrWeek);
-        })
-        .catch((err) => {
-            console.error(err);
-        });
+    .catch((err) => {
+      console.error(err);
+    });
 }
 
-function changeMediumCardText(weather) {
+function updateMediumCardData(weather) {
+    let statusUpdater = new StatusUpdater();
     documentElements.uvIndex.innerText = weather.uvindex;
     documentElements.windSpeed.innerText = `${Math.round(weather.windspeed / 3.6)} м/с`;
     documentElements.humidity.innerText = `${weather.humidity} %`;
     documentElements.visibility.innerText = `${weather.visibility} км`;
+    statusUpdater.updateVisibility(weather.visibility);
+    statusUpdater.updateHumidity(weather.humidity);
+    statusUpdater.updateUvIndex(weather.uvindex);
 }
-
-function updateMediumCardStatus() {
-    let statusUpdater = new StatusUpdater();
-    statusUpdater.updateVisibility(documentElements.visibility);
-    statusUpdater.updateHumidity(documentElements.humidity);
-    statusUpdater.updateUvIndex(documentElements.uvIndex);
-}
-
 
 function getHour(time) {
     let hour = time.split(":")[0];
@@ -205,3 +199,4 @@ documentElements.weekBtn.addEventListener("click", () => {
 
 
 getPublicIp();
+
