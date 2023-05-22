@@ -82,19 +82,30 @@ function updateForecast(data, unit, type) {
 }
 
 
-function getPublicIp() {
-  fetch("https://geolocation-db.com/json/", {
-    method: "GET",
-    headers: {},
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      currentCity = data.city;
-      changeWeatherData(data.city, currentUnit, hourlyOrWeek);
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+function getCurrentCityByLatLon() {
+    navigator.geolocation.getCurrentPosition(
+        function (position) {
+            let lat = position.coords.latitude;
+            let lon = position.coords.longitude;
+            fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${lat},${lon}?unitGroup=us&key=EJ6UBL2JEQGYB3AA4ENASN62J&contentType=json`,
+                {
+                    method: "GET",
+                    headers: {},
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    let timezone = data.timezone;
+                    currentCity = timezone.split('/')[1];
+                    changeWeatherData(currentCity, currentUnit, hourlyOrWeek);
+                })
+                .catch((err) => {
+                    alert(err);
+                });
+        },
+        function errorCallback(error) {
+            alert(error)
+        }
+    );
 }
 
 function updateMediumCardData(weather) {
@@ -198,5 +209,5 @@ documentElements.weekBtn.addEventListener("click", () => {
 });
 
 
-getPublicIp();
+getCurrentCityByLatLon();
 
