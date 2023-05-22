@@ -21,11 +21,7 @@ async def startup_event():
         get_current_weather_url=environ.get("CURRENT_WEATHER_URL"),
         get_five_days_weather_url=environ.get("FIVE_DAYS_WEATHER_URL")
     )
-    app.state.weather_client = WeatherClient(
-        weather_api_key,
-        weather_api_urls,
-        app.logger
-    )
+    app.state.weather_client = WeatherClient(weather_api_key, weather_api_urls, app.logger)
 
 
 @app.get("/")
@@ -34,15 +30,8 @@ async def root(request: Request):
 
 
 @app.get("/api/v1.0/current/{location}")
-async def current_weather_by_location(
-        location: str,
-        lang: str = 'ru',
-        units: str = 'metric'):
-    weather = await app.state.weather_client.get_current_weather_by_location(
-        location,
-        lang,
-        units
-    )
+async def current_weather_by_location(location: str, lang: str = 'ru', units: str = 'metric'):
+    weather = await app.state.weather_client.get_current_weather_by_location(location, lang, units)
 
     if len(weather.keys()) == 0:
         raise HTTPException(status_code=404, detail="Weather not found")
@@ -51,17 +40,8 @@ async def current_weather_by_location(
 
 
 @app.get("/api/v1.0/current")
-async def current_weather_by_lat_lon(
-        lat: float,
-        lon: float,
-        lang: str = 'ru',
-        units: str = 'metric'):
-    weather = await app.state.weather_client.get_current_weather_by_lat_lon(
-        lat,
-        lon,
-        lang,
-        units
-    )
+async def current_weather_by_lat_lon(lat: float, lon: float, lang: str = 'ru', units: str = 'metric'):
+    weather = await app.state.weather_client.get_current_weather_by_lat_lon(lat, lon, lang, units)
 
     if len(weather.keys()) == 0:
         raise HTTPException(status_code=404, detail="Weather not found")

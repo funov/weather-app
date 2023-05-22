@@ -7,20 +7,12 @@ from app.weather_client.weather_api_urls import WeatherApiUrls
 
 
 class WeatherClient:
-    def __init__(
-            self,
-            weather_api_key: str,
-            weather_api_urls: WeatherApiUrls,
-            logger: logging.Logger) -> None:
+    def __init__(self, weather_api_key: str, weather_api_urls: WeatherApiUrls, logger: logging.Logger) -> None:
         self.weather_api_key = weather_api_key
         self.weather_api_urls = weather_api_urls
         self.logger = logger
 
-    async def get_current_weather_by_location(
-            self,
-            location: str,
-            lang: str,
-            units: str) -> dict:
+    async def get_current_weather_by_location(self, location: str, lang: str, units: str) -> dict:
         async with httpx.AsyncClient() as client:
             response = await client.get(
                 self.weather_api_urls.get_current_weather_url,
@@ -33,12 +25,7 @@ class WeatherClient:
             )
         return self._parse_weather(response)
 
-    async def get_current_weather_by_lat_lon(
-            self,
-            lat: int,
-            lon: int,
-            lang: str,
-            units: str) -> dict:
+    async def get_current_weather_by_lat_lon(self, lat: int, lon: int, lang: str, units: str) -> dict:
         async with httpx.AsyncClient() as client:
             response = await client.get(
                 self.weather_api_urls.get_current_weather_url,
