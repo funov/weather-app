@@ -1,8 +1,8 @@
 import {DocumentElements} from './DocumentElements.js';
 
-const documentElements = new DocumentElements();
+let documentElements = new DocumentElements();
 
-export class StatusUpdater {
+export class StatusMediumCardsUpdater {
     updateUvIndex(uvIndex) {
         if (uvIndex <= 2) {
             documentElements.uvIndexStatus.innerText = "Низкий";

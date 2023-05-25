@@ -1,13 +1,23 @@
-import {StatusUpdater} from './StatusUpdater.js';
 import {DocumentElements} from './DocumentElements.js';
+import {UnitUpdater} from "./UnitUpdater.js";
+import {ForecastUpdater} from "./ForecastUpdater.js";
+import {DateTimeUpdater} from "./DateTimeUpdater.js";
+import {SidebarDataUpdater} from "./SidebarDataUpdater.js";
+import {MediumCardsUpdater} from "./MediumCardsUpdater.js";
+import {Geolocator} from "./Geolocator.js";
+import {CurrentState} from "./CurrentState.js";
 
-let currentCity = "";
-let currentUnit = "c";
-let hourlyOrWeek = "week";
-const documentElements = new DocumentElements();
+export let currentState = new CurrentState();
+let documentElements = new DocumentElements();
+let unitUpdater = new UnitUpdater();
+let forecastUpdater = new ForecastUpdater();
+let dateTimeUpdater = new DateTimeUpdater();
+let sidebarDataUpdater = new SidebarDataUpdater();
+let mediumCardsUpdater = new MediumCardsUpdater();
+let geolocator = new Geolocator();
 
 
-const changeWeatherData = async (city, unit, hourlyOrWeek) => {
+export let changeWeatherData = async (city, unit, hourlyOrWeek) => {
     fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&key=EJ6UBL2JEQGYB3AA4ENASN62J&contentType=json`,
         {
             method: "GET",
@@ -16,12 +26,12 @@ const changeWeatherData = async (city, unit, hourlyOrWeek) => {
         .then((response) => response.json())
         .then((data) => {
             let weather = data.currentConditions;
-            updateSidebarData(data, weather, unit);
-            updateMediumCardData(weather)
+            sidebarDataUpdater.updateData(data, weather, unit);
+            mediumCardsUpdater.UpdateData(weather)
             if (hourlyOrWeek === "hourly") {
-                updateForecast(data.days[0].hours, unit, "day");
+                forecastUpdater.renderForecastCards(data.days[0].hours, unit, hourlyOrWeek);
             } else {
-                updateForecast(data.days, unit, "week");
+                forecastUpdater.renderForecastCards(data.days, unit, hourlyOrWeek);
             }
             // changeBackground(today.icon);
         })
@@ -30,148 +40,7 @@ const changeWeatherData = async (city, unit, hourlyOrWeek) => {
         });
 }
 
-function updateSidebarData(data, weather, unit) {
-    documentElements.currentLocation.innerText = data.resolvedAddress;
-    documentElements.description.innerText = weather.conditions;
-    if (unit === "c") {
-        documentElements.temp.innerText = Math.round(weather.temp);
-    } else {
-        documentElements.temp.innerText = celsiusToFahrenheit(weather.temp);
-    }
-    documentElements.mainIcon.src = getIcon(weather.icon); //получение картинки
-}
-
-function updateForecast(data, unit, type) {
-    documentElements.weatherCards.innerHTML = "";
-    let day = 0;
-    let numCards = 0;
-    if (type === "day") {
-        numCards = 24;
-    } else {
-        numCards = 7;
-    }
-    for (let i = 0; i < numCards; i++) {
-        let card = document.createElement("div");
-        card.classList.add("card");
-        let dayName = getHour(data[day].datetime);
-        if (type === "week") {
-            dayName = getDayName(data[day].datetime);
-        }
-        let dayTemp = Math.round(data[day].temp);
-        if (unit === "f") {
-            dayTemp = celsiusToFahrenheit(data[day].temp);
-        }
-        let iconCondition = data[day].icon;
-        let iconSrc = getIcon(iconCondition);
-        let tempUnit = "°C";
-        if (unit === "f") {
-            tempUnit = "°F";
-        }
-        card.innerHTML = `
-                <h2 class="day-name">${dayName}</h2>
-            <div class="card-icon">
-                <img src="${iconSrc}" class="day-icon" alt="" />
-            </div>
-            <div class="day-temp">
-              <h2 class="temp">${dayTemp}</h2>
-              <span class="temp-unit">${tempUnit}</span>
-            </div>`;
-        documentElements.weatherCards.appendChild(card);
-        day++;
-    }
-}
-
-
-function getCurrentCityByLatLon() {
-    navigator.geolocation.getCurrentPosition(
-        function (position) {
-            let lat = position.coords.latitude;
-            let lon = position.coords.longitude;
-            fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${lat},${lon}?unitGroup=us&key=EJ6UBL2JEQGYB3AA4ENASN62J&contentType=json`,
-                {
-                    method: "GET",
-                    headers: {},
-                })
-                .then((response) => response.json())
-                .then((data) => {
-                    let timezone = data.timezone;
-                    currentCity = timezone.split('/')[1];
-                    changeWeatherData(currentCity, currentUnit, hourlyOrWeek);
-                })
-                .catch((err) => {
-                    alert(err);
-                });
-        },
-        function errorCallback(error) {
-            alert(error)
-        }
-    );
-}
-
-function updateMediumCardData(weather) {
-    let statusUpdater = new StatusUpdater();
-    documentElements.uvIndex.innerText = weather.uvindex;
-    documentElements.windSpeed.innerText = `${Math.round(weather.windspeed / 3.6)} м/с`;
-    documentElements.humidity.innerText = `${weather.humidity} %`;
-    documentElements.visibility.innerText = `${weather.visibility} км`;
-    statusUpdater.updateVisibility(weather.visibility);
-    statusUpdater.updateHumidity(weather.humidity);
-    statusUpdater.updateUvIndex(weather.uvindex);
-}
-
-function getHour(time) {
-    let hour = time.split(":")[0];
-    let min = time.split(":")[1];
-
-    return `${hour}:${min}`;
-}
-
-function getDayName(date) {
-    let day = new Date(date);
-    let days = [
-        "Воскресенье",
-        "Понедельник",
-        "Вторник",
-        "Среда",
-        "Четверг",
-        "Пятница",
-        "Суббота",
-    ];
-    return days[day.getDay()];
-}
-
-function changeUnit(unit) {
-    if (currentUnit !== unit) {
-        currentUnit = unit;
-        documentElements.tempUnit.forEach((elem) => {
-            elem.innerText = `°${unit.toUpperCase()}`;
-        });
-        if (unit === "c") {
-            documentElements.celsiusBtn.classList.add("active");
-            documentElements.fahrenheitBtn.classList.remove("active");
-        } else {
-            documentElements.celsiusBtn.classList.remove("active");
-            documentElements.fahrenheitBtn.classList.add("active");
-        }
-        changeWeatherData(currentCity, currentUnit, hourlyOrWeek);
-    }
-}
-
-function changeHourlyOrWeek(unit) {
-    if (hourlyOrWeek !== unit) {
-        hourlyOrWeek = unit;
-        if (unit === "hourly") {
-            documentElements.hourlyBtn.classList.add("active");
-            documentElements.weekBtn.classList.remove("active");
-        } else {
-            documentElements.hourlyBtn.classList.remove("active");
-            documentElements.weekBtn.classList.add("active");
-        }
-        changeWeatherData(currentCity, currentUnit, hourlyOrWeek);
-    }
-}
-
-function getIcon(condition) {
+export function getIcon(condition) { //потом из нашего апи буду брать
     if (condition === "partly-cloudy-day") {
         return "https://i.ibb.co/PZQXH8V/27.png";
     } else if (condition === "partly-cloudy-night") {
@@ -188,35 +57,35 @@ function getIcon(condition) {
 }
 
 
-function celsiusToFahrenheit(temp) {
-    return ((temp * 9) / 5 + 32).toFixed(1);
-}
-
 documentElements.fahrenheitBtn.addEventListener("click", () => {
-    changeUnit("f");
+    unitUpdater.changeUnit("f");
 });
 
 documentElements.celsiusBtn.addEventListener("click", () => {
-    changeUnit("c");
+    unitUpdater.changeUnit("c");
 });
 
 documentElements.hourlyBtn.addEventListener("click", () => {
-    changeHourlyOrWeek("hourly");
+    forecastUpdater.changeForecast("hourly");
 });
 
 documentElements.weekBtn.addEventListener("click", () => {
-    changeHourlyOrWeek("week");
+    forecastUpdater.changeForecast("week");
 });
 
 documentElements.searchForm.addEventListener("submit", (e) => {
     e.preventDefault();
     let location = documentElements.search.value;
     if (location) {
-        currentCity = location;
-        changeWeatherData(location, currentUnit, hourlyOrWeek);
+        currentState.currentCity = location;
+        changeWeatherData(location, currentState.currentUnit, currentState.hourlyOrWeek);
     }
 });
 
+documentElements.date.innerText = dateTimeUpdater.getDateTime();
+setInterval(() => {
+    documentElements.date.innerText = dateTimeUpdater.getDateTime();
+}, 1000);
 
-getCurrentCityByLatLon();
+geolocator.defineLocationByLatLon();
 
