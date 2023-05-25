@@ -13,11 +13,11 @@
     <div class="sidebar">
         <div>
             <form class="search" id="search">
-            <input type="text" id="query" placeholder="Поиск..."/>
-            <button id="search-button"><img
-                    src="{{ url_for('static', path='/icons/lupa.png') }}"
-                    alt="">
-            </button>
+                <input type="text" id="query" placeholder="Поиск..."/>
+                <button id="search-button" type="submit"><img
+                        src="{{ url_for('static', path='/icons/lupa.png') }}"
+                        alt="">
+                </button>
             </form>
             <div class="weather-icon">
                 <img src="{{ url_for('static', path='/icons/sun/4.png') }}"

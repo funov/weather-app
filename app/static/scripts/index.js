@@ -208,6 +208,15 @@ documentElements.weekBtn.addEventListener("click", () => {
     changeHourlyOrWeek("week");
 });
 
+documentElements.searchForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    let location = documentElements.search.value;
+    if (location) {
+        currentCity = location;
+        changeWeatherData(location, currentUnit, hourlyOrWeek);
+    }
+});
+
 
 getCurrentCityByLatLon();
 
