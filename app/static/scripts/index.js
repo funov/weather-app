@@ -6,6 +6,7 @@ import {SidebarDataUpdater} from "./SidebarDataUpdater.js";
 import {MediumCardsUpdater} from "./MediumCardsUpdater.js";
 import {Geolocator} from "./Geolocator.js";
 import {CurrentState} from "./CurrentState.js";
+import {SidebarCardsUpdater} from "./SidebarCardsUpdater.js";
 
 export let currentState = new CurrentState();
 let documentElements = new DocumentElements();
@@ -15,6 +16,7 @@ let dateTimeUpdater = new DateTimeUpdater();
 let sidebarDataUpdater = new SidebarDataUpdater();
 let mediumCardsUpdater = new MediumCardsUpdater();
 let geolocator = new Geolocator();
+let sidebarCardsUpdater = new SidebarCardsUpdater();
 
 
 export let changeWeatherData = async (city, unit, hourlyOrWeek) => {
@@ -27,7 +29,7 @@ export let changeWeatherData = async (city, unit, hourlyOrWeek) => {
         .then((data) => {
             let weather = data.currentConditions;
             sidebarDataUpdater.updateData(data, weather, unit);
-            mediumCardsUpdater.UpdateData(weather)
+            mediumCardsUpdater.UpdateData(weather);
             if (hourlyOrWeek === "hourly") {
                 forecastUpdater.renderForecastCards(data.days[0].hours, unit, hourlyOrWeek);
             } else {
@@ -56,7 +58,6 @@ export function getIcon(condition) { //потом из нашего апи бу�
     }
 }
 
-
 documentElements.fahrenheitBtn.addEventListener("click", () => {
     unitUpdater.changeUnit("f");
 });
@@ -82,10 +83,19 @@ documentElements.searchForm.addEventListener("submit", (e) => {
     }
 });
 
+document.querySelectorAll('.sidebar-cards button')
+    .forEach(b => b.addEventListener('click', getValue));
+
+function getValue(e) {
+    changeWeatherData(this.value, currentState.currentUnit, currentState.hourlyOrWeek);
+}
+
+
 documentElements.date.innerText = dateTimeUpdater.getDateTime();
 setInterval(() => {
     documentElements.date.innerText = dateTimeUpdater.getDateTime();
 }, 1000);
 
+sidebarCardsUpdater.UpdateData();
 geolocator.defineLocationByLatLon();
 

@@ -1,8 +1,10 @@
 export class DateTimeUpdater {
-    getDateTime() {
-        let now = new Date(),
-            hour = now.getHours(),
-            minute = now.getMinutes();
+    constructor() {
+        let now = new Date();
+        let hour = now.getHours();
+        let minute = now.getMinutes();
+        this.hour = hour;
+        this.minute = minute;
 
         let days = [
             "Воскресенье",
@@ -15,12 +17,19 @@ export class DateTimeUpdater {
         ];
 
         if (hour < 10) {
-            hour = "0" + hour;
+            this.hour = "0" + hour;
         }
         if (minute < 10) {
-            minute = "0" + minute;
+            this.minute = "0" + minute;
         }
-        let dayString = days[now.getDay()];
-        return `${dayString}, ${hour}:${minute}`;
+        this.dayString = days[now.getDay()];
+    }
+
+    getDateTime() {
+        return `${this.dayString}, ${this.hour}:${this.minute}`;
+    }
+
+    getMinute(){
+        return this.minute;
     }
 }
