@@ -35,14 +35,61 @@
                 <i class="fas fa-cloud"></i>
                 <p id="description">condition</p>
             </div>
-            <div class="sidebar-card">
-                <p id="city">Москва</p>
-            </div>
-            <div class="sidebar-card">
-                <p id="city">Санкт-Петербург</p>
-            </div>
-            <div class="sidebar-card">
-                <p id="city">Екатеринбург</p>
+            <div class="sidebar-cards">
+                <button id="sidebar-card" type="submit">
+                    <div class="main-data">
+                        <div class="city">
+                            <p id="name">Москва</p>
+                            <p id="date">12:00</p>
+                        </div>
+                        <div class="temperature">
+                            <p id="temp">9</p>
+                            <p id="unit">°C</p>
+                        </div>
+                    </div>
+                    <div class="minor-data">
+                        <img src="{{ url_for('static', path='/icons/arrow_up.png') }}" alt="" id="arrow_up"/>
+                        <p id="max">20</p>
+                        <img src="{{ url_for('static', path='/icons/arrow_down.png') }}" alt="" id="arrow_down"/>
+                        <p id="min">10</p>
+                    </div>
+                </button>
+                <button id="sidebar-card" type="submit">
+                    <div class="main-data">
+                        <div class="city">
+                            <p id="name">Санкт-Петербург</p>
+                            <p id="date">12:00</p>
+                        </div>
+                        <div class="temperature">
+                            <p id="temp">9</p>
+                            <p id="unit">°C</p>
+                        </div>
+                    </div>
+                    <div class="minor-data">
+                        <img src="{{ url_for('static', path='/icons/arrow_up.png') }}" alt="" id="arrow_up"/>
+                        <p id="max">20</p>
+                        <img src="{{ url_for('static', path='/icons/arrow_down.png') }}" alt="" id="arrow_down"/>
+                        <p id="min">10</p>
+                    </div>
+                </button>
+                <button id="sidebar-card" type="submit">
+                    <div class="main-data">
+                        <div class="city">
+                            <p id="name">Екатеринбург</p>
+                            <p id="date">12:00</p>
+                        </div>
+                        <div class="temperature">
+                            <p id="temp">9</p>
+                            <p id="unit">°C</p>
+                        </div>
+                    </div>
+                    <div class="minor-data">
+                        <img src="{{ url_for('static', path='/icons/arrow_up.png') }}" alt="" id="arrow_up"/>
+                        <p id="max">20</p>
+                        <img src="{{ url_for('static', path='/icons/arrow_down.png') }}" alt="" id="arrow_down"/>
+                        <p id="min">10</p>
+                    </div>
+                </button>
             </div>
         </div>
         <div class="location">
