@@ -5,15 +5,16 @@ import {UnitUpdater} from "./UnitUpdater.js";
 let documentElements = new DocumentElements();
 let unitUpdater = new UnitUpdater();
 
-export class SidebarDataUpdater{
-    updateData(data, weather, unit) {
+export class SidebarDataUpdater {
+    updateData(data, currentConditions, unit) {
         documentElements.currentLocation.innerText = data.resolvedAddress;
-        documentElements.description.innerText = weather.conditions;
+        documentElements.description.innerText = currentConditions.conditions[0]
+            + currentConditions.conditions.slice(1).toLowerCase();
         if (unit === "c") {
-            documentElements.temp.innerText = Math.round(weather.temp);
+            documentElements.temp.innerText = Math.round(currentConditions.temp);
         } else {
-            documentElements.temp.innerText = unitUpdater.celsiusToFahrenheit(weather.temp);
+            documentElements.temp.innerText = unitUpdater.celsiusToFahrenheit(currentConditions.temp);
         }
-        documentElements.mainIcon.src = getIcon(weather.icon);
+        documentElements.mainIcon.src = getIcon(currentConditions.icon);
     }
 }

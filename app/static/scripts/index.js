@@ -20,16 +20,16 @@ let sidebarCardsUpdater = new SidebarCardsUpdater();
 
 
 export let changeWeatherData = async (city, unit, hourlyOrWeek) => {
-    fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&key=EJ6UBL2JEQGYB3AA4ENASN62J&contentType=json`,
+    fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&lang=ru&key=EJ6UBL2JEQGYB3AA4ENASN62J&contentType=json`,
         {
             method: "GET",
             headers: {},
         })
         .then((response) => response.json())
         .then((data) => {
-            let weather = data.currentConditions;
-            sidebarDataUpdater.updateData(data, weather, unit);
-            mediumCardsUpdater.UpdateData(weather);
+            let currentConditions = data.currentConditions;
+            sidebarDataUpdater.updateData(data, currentConditions, unit);
+            mediumCardsUpdater.UpdateData(currentConditions);
             if (hourlyOrWeek === "hourly") {
                 forecastUpdater.renderForecastCards(data.days[0].hours, unit, hourlyOrWeek);
             } else {

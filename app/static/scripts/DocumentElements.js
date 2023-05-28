@@ -5,12 +5,13 @@ export class DocumentElements {
     mainIcon = document.getElementById("icon");
     currentLocation = document.getElementById("location");
     uvIndex = document.querySelector(".uvIndex");
-    windSpeed = document.querySelector(".wind-speed");
+    windSpeed = document.querySelector(".windSpeed");
     humidity = document.querySelector(".humidity");
     visibility = document.querySelector(".visibility");
     uvIndexStatus = document.querySelector(".uvIndex-status");
     humidityStatus = document.querySelector(".humidity-status");
     visibilityStatus = document.querySelector(".visibility-status");
+    windSpeedStatus = document.querySelector(".windSpeed-status");
     searchForm = document.querySelector("#search");
     search = document.querySelector("#query");
     celsiusBtn = document.querySelector(".celsius");
