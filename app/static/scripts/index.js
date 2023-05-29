@@ -58,6 +58,11 @@ export function getIcon(condition) { //потом из нашего апи бу�
     }
 }
 
+documentElements.date.innerText = dateTimeUpdater.getDateTime();
+setInterval(() => {
+    documentElements.date.innerText = dateTimeUpdater.getDateTime();
+}, 1000);
+
 documentElements.fahrenheitBtn.addEventListener("click", () => {
     unitUpdater.changeUnit("f");
 });
@@ -89,12 +94,6 @@ document.querySelectorAll('.sidebar-cards button')
 function getValue(e) {
     changeWeatherData(this.value, currentState.currentUnit, currentState.hourlyOrWeek);
 }
-
-
-documentElements.date.innerText = dateTimeUpdater.getDateTime();
-setInterval(() => {
-    documentElements.date.innerText = dateTimeUpdater.getDateTime();
-}, 1000);
 
 sidebarCardsUpdater.UpdateData();
 geolocator.defineLocationByLatLon();
