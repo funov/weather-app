@@ -9,7 +9,7 @@ import {CurrentState} from "./CurrentState.js";
 import {SidebarCardsUpdater} from "./SidebarCardsUpdater.js";
 import {BackgroundUpdater} from "./BackgroundUpdater.js";
 
-let intervalId = -1;
+
 export let currentState = new CurrentState();
 let documentElements = new DocumentElements();
 let unitUpdater = new UnitUpdater();
@@ -23,17 +23,13 @@ let backgroundUpdater = new BackgroundUpdater();
 
 
 export let changeWeatherData = (city, unit, hourlyOrWeek) => {
-        fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&lang=ru&key=EJ6UBL2JEQGYB3AA4ENASN62J&contentType=json`,
+    fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&lang=ru&key=EJ6UBL2JEQGYB3AA4ENASN62J&contentType=json`,
         {
             method: "GET",
             headers: {},
         })
         .then((response) => response.json())
-        .then( (data) => {
-            if (intervalId !== -1){
-                clearInterval(intervalId);
-            }
-            console.log(`before getTimeZone${dateTimeUpdater.getHour()}`);
+        .then((data) => {
             let currentConditions = data.currentConditions;
             sidebarDataUpdater.updateData(data, currentConditions, unit);
             mediumCardsUpdater.UpdateData(currentConditions);
@@ -43,16 +39,9 @@ export let changeWeatherData = (city, unit, hourlyOrWeek) => {
                 forecastUpdater.renderForecastCards(data.days, unit, hourlyOrWeek);
             }
             currentState.timezone = data['timezone'];
-            dateTimeUpdater.getDateTimeByTimezone(currentState.timezone);
-            // intervalId = setInterval( () => {
-            //     documentElements.date.innerText = dateTimeUpdater.getDateTimeByTimezone(currentState.timezone);
-            //     }, 1000);
-            // documentElements.date.innerText = dateTimeUpdater.getDateTimeByTimezone(data['timezone']);
-            // backgroundUpdater.UpdateBackground(dateTimeUpdater.getHour());
+            documentElements.date.innerText = dateTimeUpdater.getDateTimeByTimezone(currentState.timezone);
+            backgroundUpdater.UpdateBackground(dateTimeUpdater.hour);
         })
-            .then(() =>{
-                console.log(`after getTimeZone${dateTimeUpdater.hour}`);
-            })
         .catch((err) => {
             alert(err);
         });
@@ -98,6 +87,10 @@ documentElements.searchForm.addEventListener("submit", (e) => {
         changeWeatherData(location, currentState.currentUnit, currentState.hourlyOrWeek);
     }
 });
+
+setInterval(() => {
+    documentElements.date.innerText = dateTimeUpdater.getDateTimeByTimezone(currentState.timezone);
+}, 1000);
 
 
 document.querySelectorAll('.sidebar-cards button')
