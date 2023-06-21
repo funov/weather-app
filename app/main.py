@@ -2,32 +2,33 @@ import logging
 from os import environ
 
 from fastapi import FastAPI, Request, HTTPException
-from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
-from fastapi.middleware.cors import CORSMiddleware
+# from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
+# from fastapi.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
 
+from app.weather_client.weather_api_keys_refresher import WeatherApiKeysRefresher
 from app.weather_client.weather_api_settings import WeatherApiSettings
 from app.weather_client.weather_api_client import WeatherClient
 
 app = FastAPI()
 
 # TODO
-origins = [
-    "http://localhost.tiangolo.com",
-    "https://localhost.tiangolo.com",
-    "http://localhost",
-    "http://localhost:8080",
-]
+# origins = [
+#     "http://localhost.tiangolo.com",
+#     "https://localhost.tiangolo.com",
+#     "http://localhost",
+#     "http://localhost:8080",
+# ]
 
 # TODO
-app.add_middleware(HTTPSRedirectMiddleware)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_methods=["GET"],
-    allow_headers=["*"]
-)
+# app.add_middleware(HTTPSRedirectMiddleware)
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=origins,
+#     allow_methods=["GET"],
+#     allow_headers=["*"]
+# )
 
 app.logger = logging.getLogger("uvicorn")
 app.mount("/app/static", StaticFiles(directory="app/static"), name="static")
@@ -42,7 +43,10 @@ async def startup_event():
         weather_api_url=weather_api_url,
         weather_api_keys=weather_api_keys
     )
-    app.state.weather_client = WeatherClient(weather_api_settings, app.logger)
+    weather_client = WeatherClient(weather_api_settings, app.logger)
+    weather_api_keys_refresher = WeatherApiKeysRefresher(weather_client.api_keys_manager)
+    app.state.weather_client = weather_client
+    weather_api_keys_refresher.run()
 
 
 @app.get("/")

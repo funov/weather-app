@@ -15,7 +15,7 @@ class WeatherClient:
 
         self._weather_api_keys = weather_api_settings.weather_api_keys
         self._weather_api_url = weather_api_settings.weather_api_url
-        self.api_keys_manager = WeatherApiKeysManager(self._weather_api_keys)
+        self.api_keys_manager = WeatherApiKeysManager(self._weather_api_keys, logger)
         self.logger = logger
 
     async def get_next_week_weather(self, location: str, lang: str = 'ru', unit_group: str = 'metric') -> dict:
@@ -48,6 +48,9 @@ class WeatherClient:
         response_json = response.json()
         current_conditions = response_json['currentConditions']
 
+        # TODO
+        # + из today max и min temp
+        # winddir - air quality
         return {
             'timezone': response_json['timezone'],
             'location': response_json['resolvedAddress'],
@@ -58,13 +61,11 @@ class WeatherClient:
             'humidity': current_conditions['humidity'],
             'windSpeed': current_conditions['windspeed'],
             'icon': current_conditions['icon'],
-            'feelsLike': current_conditions['feelslike'],
-            'temperatureMin': current_conditions['tempmin'],
-            'temperatureMax': current_conditions['tempmax']
+            'feelsLike': current_conditions['feelslike']
         }
 
     async def _send_weather_request(self, url: str, lang: str, unit_group: str) -> Response:
-        api_key = self.api_keys_manager.get_api_key()
+        api_key = await self.api_keys_manager.get_api_key()
         elements = ','.join(self._elements)
 
         # TODO
@@ -81,7 +82,8 @@ class WeatherClient:
             })
 
         # TODO
-        self.logger.info(f'GET {response.url} {response.http_version} {response.status_code}')
+        logging_url = f'{url}?key={api_key}&lang={lang}&unitGroup={unit_group}&elements={elements}'
+        self.logger.info(f'[WeatherApiClient] GET {logging_url} {response.http_version} {response.status_code}')
 
         # TODO
         if response.status_code != 200:
@@ -112,16 +114,6 @@ class WeatherClient:
             hours = WeatherClient._get_hours_from_json(hours_json)
             day = {
                 'date': day_json['datetime'],
-                'temperature': day_json['temp'],
-                'description': day_json['conditions'],
-                'uvIndex': day_json['uvindex'],
-                'visibility': day_json['visibility'],
-                'humidity': day_json['humidity'],
-                'windSpeed': day_json['windspeed'],
-                'icon': day_json['icon'],
-                'feelsLike': day_json['feelslike'],
-                'temperatureMin': day_json['tempmin'],
-                'temperatureMax': day_json['tempmax'],
                 'hours': hours
             }
             days.append(day)
