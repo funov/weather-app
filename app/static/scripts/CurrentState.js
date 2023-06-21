@@ -3,5 +3,7 @@ export class CurrentState{
         this.currentCity = "";
         this.currentUnit = "c";
         this.hourlyOrWeek = "week";
+        this.timesOfDay = "";
+        this.timezone = "Asia/Yekaterinburg";
     }
 }

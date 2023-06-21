@@ -7,7 +7,9 @@ import {MediumCardsUpdater} from "./MediumCardsUpdater.js";
 import {Geolocator} from "./Geolocator.js";
 import {CurrentState} from "./CurrentState.js";
 import {SidebarCardsUpdater} from "./SidebarCardsUpdater.js";
+import {BackgroundUpdater} from "./BackgroundUpdater.js";
 
+let intervalId = -1;
 export let currentState = new CurrentState();
 let documentElements = new DocumentElements();
 let unitUpdater = new UnitUpdater();
@@ -17,16 +19,21 @@ let sidebarDataUpdater = new SidebarDataUpdater();
 let mediumCardsUpdater = new MediumCardsUpdater();
 let geolocator = new Geolocator();
 let sidebarCardsUpdater = new SidebarCardsUpdater();
+let backgroundUpdater = new BackgroundUpdater();
 
 
-export let changeWeatherData = async (city, unit, hourlyOrWeek) => {
-    fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&lang=ru&key=EJ6UBL2JEQGYB3AA4ENASN62J&contentType=json`,
+export let changeWeatherData = (city, unit, hourlyOrWeek) => {
+        fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&lang=ru&key=EJ6UBL2JEQGYB3AA4ENASN62J&contentType=json`,
         {
             method: "GET",
             headers: {},
         })
         .then((response) => response.json())
-        .then((data) => {
+        .then( (data) => {
+            if (intervalId !== -1){
+                clearInterval(intervalId);
+            }
+            console.log(`before getTimeZone${dateTimeUpdater.getHour()}`);
             let currentConditions = data.currentConditions;
             sidebarDataUpdater.updateData(data, currentConditions, unit);
             mediumCardsUpdater.UpdateData(currentConditions);
@@ -35,14 +42,23 @@ export let changeWeatherData = async (city, unit, hourlyOrWeek) => {
             } else {
                 forecastUpdater.renderForecastCards(data.days, unit, hourlyOrWeek);
             }
-            // changeBackground(today.icon);
+            currentState.timezone = data['timezone'];
+            dateTimeUpdater.getDateTimeByTimezone(currentState.timezone);
+            // intervalId = setInterval( () => {
+            //     documentElements.date.innerText = dateTimeUpdater.getDateTimeByTimezone(currentState.timezone);
+            //     }, 1000);
+            // documentElements.date.innerText = dateTimeUpdater.getDateTimeByTimezone(data['timezone']);
+            // backgroundUpdater.UpdateBackground(dateTimeUpdater.getHour());
         })
+            .then(() =>{
+                console.log(`after getTimeZone${dateTimeUpdater.hour}`);
+            })
         .catch((err) => {
             alert(err);
         });
 }
 
-export function getIcon(condition) { //потом из нашего апи буду брать
+export function getIcon(condition) {
     if (condition === "partly-cloudy-day") {
         return "https://i.ibb.co/PZQXH8V/27.png";
     } else if (condition === "partly-cloudy-night") {
@@ -57,11 +73,6 @@ export function getIcon(condition) { //потом из нашего апи бу�
         return "https://i.ibb.co/rb4rrJL/26.png";
     }
 }
-
-documentElements.date.innerText = dateTimeUpdater.getDateTime();
-setInterval(() => {
-    documentElements.date.innerText = dateTimeUpdater.getDateTime();
-}, 1000);
 
 documentElements.fahrenheitBtn.addEventListener("click", () => {
     unitUpdater.changeUnit("f");
@@ -88,8 +99,10 @@ documentElements.searchForm.addEventListener("submit", (e) => {
     }
 });
 
+
 document.querySelectorAll('.sidebar-cards button')
     .forEach(b => b.addEventListener('click', getValue));
+
 
 function getValue(e) {
     changeWeatherData(this.value, currentState.currentUnit, currentState.hourlyOrWeek);

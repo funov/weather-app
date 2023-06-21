@@ -9,6 +9,7 @@
     <title>Weather App</title>
 </head>
 <body>
+<div class="body2"></div>
 <div class="wrapper">
     <div class="sidebar">
         <div>
@@ -153,6 +154,22 @@
         </div>
     </div>
 </div>
+{#<div class="container">#}
+{#    <div class="spinner">#}
+{#        <div class="sun"></div>#}
+{#        <div class="moon"></div>#}
+{#    </div>#}
+{#</div>#}
+{#<div class="stars"></div>#}
+<div class="glow-box">
+    <div class="glow-box-left">
+        <div class="glow-left"></div>
+    </div>
+    <div class="glow-box-right">
+        <div class="glow-right"></div>
+    </div>
+</div>
+
 <script type="module"
         src="{{ url_for('static', path='/scripts/index.js') }}"></script>
 </body>

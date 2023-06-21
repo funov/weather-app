@@ -20,6 +20,7 @@ export class ForecastUpdater {
         } else {
             numCards = 7;
         }
+
         for (let i = 0; i < numCards; i++) {
             let card = document.createElement("div");
             card.classList.add("card");
