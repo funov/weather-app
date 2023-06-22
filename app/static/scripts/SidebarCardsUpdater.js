@@ -16,6 +16,7 @@ export class SidebarCardsUpdater {
 class SidebarCardUpdater {
     //потом буду просто ходить в нашу апи, брать поля из now
     constructor(city, id, timezone) {
+        this.city = city;
         this.timezone = timezone;
         this.id = id;
         this.url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&key=EJ6UBL2JEQGYB3AA4ENASN62J&contentType=json`;
@@ -38,9 +39,10 @@ class SidebarCardUpdater {
                 document.getElementById(`${this.id}Temp`).innerText = temp;
                 document.getElementById(`${this.id}Max`).innerText = maxTemp;
                 document.getElementById(`${this.id}Min`).innerText = minTemp;
-                // setInterval(() => {
-                //     document.getElementById(`${this.city}Date`).innerText = ;
-                // }, 1000);
+                setInterval(() => {
+                    document.getElementById(`${this.id}Date`).innerText
+                        = dateTimeUpdater.getTimeByTimezone(this.timezone);
+                }, 1000);
             })
             .catch((err) => {
                 alert(err);

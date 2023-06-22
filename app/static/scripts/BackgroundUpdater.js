@@ -15,10 +15,8 @@ export class BackgroundUpdater {
 
     ChangeAnimation(timesOfDay){
         if (currentState.timesOfDay !== ''){
-            console.log('no');
             this.DeleteAnimation();
         }
-        console.log('yes');
         let container = document.createElement("div");
         container.className = "container";
 
@@ -94,15 +92,12 @@ export class BackgroundUpdater {
 
     GetResponseTimesOfDay(time){
         if (0 <= time && time < 6){
-            console.log('not true 1')
             return 'night';
         }
         else if (6 <=  time && time < 12){
-            console.log('not true 2')
             return 'morning';
         }
         else if (12 <=  time && time < 18){
-            console.log('true')
             return 'day';
         }
         return 'evening';
