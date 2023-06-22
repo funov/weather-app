@@ -3,6 +3,9 @@ import {DocumentElements} from "./DocumentElements.js";
 
 let documentElements = new DocumentElements();
 
+
+
+
 export class MediumCardsUpdater{
     UpdateData(weather) {
         let statusUpdater = new StatusMediumCardsUpdater();
