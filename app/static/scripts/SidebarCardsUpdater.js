@@ -8,6 +8,7 @@ let unitUpdater = new UnitUpdater();
 let dateTimeUpdater = new DateTimeUpdater();
 
 
+
 export class SidebarCardsUpdater {
     UpdateData() {
         let MscUpdater = new SidebarCardUpdater('Moscow', 'Msc', 'Europe/Moscow');
