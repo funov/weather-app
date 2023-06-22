@@ -11,6 +11,9 @@
 }
 
 @keyframes colors-morning {
+    0%{
+        background: #457cd0;
+    }
     53% {
         background: linear-gradient(#11137a, #324da6, #5c5eb7, #c079a7, #e5d19e);
     }
@@ -20,6 +23,9 @@
 }
 
 @keyframes colors-day {
+    0%{
+        background: #457cd0;
+    }
     53% {
         background: linear-gradient(#082f77, #2353bb, #357cd0, #28aec5, #f5f0af);
     }
@@ -29,6 +35,9 @@
 }
 
 @keyframes colors-night {
+    0%{
+        background: #457cd0;
+    }
     53% {
         background: linear-gradient(#14045f, #331a99, #282bce, #1555ec, #1e84f7);
     }
@@ -38,6 +47,9 @@
 }
 
 @keyframes colors-evening {
+    0%{
+        background: #457cd0;
+    }
     53% {
         background: linear-gradient(#3f006c, #750050, #b10042, #da4837, #f7bb38);
     }
@@ -340,10 +352,10 @@
 
 @keyframes delete {
     0%{
-        opacity: 0.7;
+        opacity: 1;
     }
     10%{
-        opacity: 0.7;
+        opacity: 1;
     }
     55%{
         opacity: 0;

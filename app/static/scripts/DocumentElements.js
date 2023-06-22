@@ -4,6 +4,7 @@ export class DocumentElements {
     description = document.getElementById("description");
     mainIcon = document.getElementById("icon");
     currentLocation = document.getElementById("location");
+    feelsLike = document.querySelector(".feelsLike");
     uvIndex = document.querySelector(".uvIndex");
     windSpeed = document.querySelector(".windSpeed");
     humidity = document.querySelector(".humidity");
@@ -12,6 +13,7 @@ export class DocumentElements {
     humidityStatus = document.querySelector(".humidity-status");
     visibilityStatus = document.querySelector(".visibility-status");
     windSpeedStatus = document.querySelector(".windSpeed-status");
+    airQualityStatus = document.querySelector(".airQuality-status");
     searchForm = document.querySelector("#search");
     search = document.querySelector("#query");
     celsiusBtn = document.querySelector(".celsius");

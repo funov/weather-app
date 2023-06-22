@@ -19,7 +19,7 @@ body {
     min-height: 100vh;
     min-width: 1000px;
     padding: 50px 50px 0 50px;
-    /*background: var(--primary-color);*/
+    background: var(--primary-color);
     /*background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));*/
     /*background-size: cover;*/
     /*background-position: center;*/
@@ -245,7 +245,7 @@ img {
 }
 
 .medium-cards {
-    width: 520px;
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
@@ -329,7 +329,7 @@ img {
 }
 
 .large-card {
-    width: 250px;
+    width: 790px;
     height: 340px;
     border-radius: 20px;
     color: #1a1a1a;
@@ -337,7 +337,7 @@ img {
     padding: 10px 20px;
     display: flex;
     flex-direction: column;
-    margin-top: 50px;
+    margin-top: 10px;
 }
 
 .large-card .card-heading {
@@ -347,8 +347,8 @@ img {
 .sidebar-cards{
     display: flex;
     flex-wrap: wrap;
-    margin-top: 17px;
-    gap: 5px;
+    margin-top: 28px;
+    gap: 10px;
     margin-bottom: 20px;
 }
 

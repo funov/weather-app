@@ -1,8 +1,12 @@
+import {DateTimeUpdater} from "./DateTimeUpdater.js";
+let dateTimeUpdater = new DateTimeUpdater();
+
+
 export class SidebarCardsUpdater {
     UpdateData() {
-        let MscUpdater = new SidebarCardUpdater('Moscow', 'Msc');
-        let SpbUpdater = new SidebarCardUpdater('Saint Petersburg', 'Spb');
-        let EkbUpdater = new SidebarCardUpdater('Yekaterinburg', 'Ekb');
+        let MscUpdater = new SidebarCardUpdater('Moscow', 'Msc', 'Europe/Moscow');
+        let SpbUpdater = new SidebarCardUpdater('Saint Petersburg', 'Spb', 'Europe/Moscow');
+        let EkbUpdater = new SidebarCardUpdater('Yekaterinburg', 'Ekb', 'Asia/Yekaterinburg');
         MscUpdater.UpdateCard();
         SpbUpdater.UpdateCard();
         EkbUpdater.UpdateCard();
@@ -10,7 +14,9 @@ export class SidebarCardsUpdater {
 }
 
 class SidebarCardUpdater {
-    constructor(city, id) {
+    //потом буду просто ходить в нашу апи, брать поля из now
+    constructor(city, id, timezone) {
+        this.timezone = timezone;
         this.id = id;
         this.url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&key=EJ6UBL2JEQGYB3AA4ENASN62J&contentType=json`;
     }
@@ -24,13 +30,11 @@ class SidebarCardUpdater {
             .then((response) => response.json())
             .then((data) => {
                 let weather = data.currentConditions;
-                let time = weather.datetime.split(':');
-                let hours = time[0];
-                let minutes = time[1];
+                let time = dateTimeUpdater.getTimeByTimezone(this.timezone);
                 let temp = weather.temp;
                 let minTemp = data.days[0].tempmin;
                 let maxTemp = data.days[0].tempmax;
-                document.getElementById(`${this.id}Date`).innerText = `${hours}:${minutes}`;
+                document.getElementById(`${this.id}Date`).innerText = `${time}`;
                 document.getElementById(`${this.id}Temp`).innerText = temp;
                 document.getElementById(`${this.id}Max`).innerText = maxTemp;
                 document.getElementById(`${this.id}Min`).innerText = minTemp;

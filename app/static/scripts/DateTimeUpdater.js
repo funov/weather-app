@@ -16,7 +16,7 @@ export class DateTimeUpdater {
         return date.toLocaleTimeString(undefined, options);
     }
 
-    getDateTimeByTimezone(timezone) {
+    calculateDateTimeByTimezone(timezone){
         let convertedTime = this.convertTimeToTimeZone(timezone);
         this.hour = convertedTime.split(':')[0];
         this.minute = convertedTime.split(':')[1];
@@ -31,6 +31,15 @@ export class DateTimeUpdater {
             "Суббота",
         ];
         this.dayString = days[new Date().getDay()];
+    }
+
+    getDateTimeByTimezone(timezone) {
+        this.calculateDateTimeByTimezone(timezone)
         return `${this.dayString}, ${this.hour}:${this.minute}`;
+    }
+
+    getTimeByTimezone(timezone){
+        this.calculateDateTimeByTimezone(timezone)
+        return `${this.hour}:${this.minute}`;
     }
 }

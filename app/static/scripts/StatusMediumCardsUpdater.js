@@ -78,4 +78,22 @@ export class StatusMediumCardsUpdater {
         }
         documentElements.windSpeedStatus.innerText = status;
     }
+
+    updateAirQuality(airQuality) {
+        let status;
+        if (airQuality <= 50) {
+            status = "Хорошо";
+        } else if (airQuality <= 100) {
+            status = "Умеренно";
+        } else if (airQuality <= 150) {
+            status = "Вредно для чувствительных людей";
+        } else if (airQuality <= 200) {
+            status = "Вредно";
+        } else if (airQuality <= 300) {
+            status = "Очень вредно";
+        } else {
+            status = "Опасно";
+        }
+        documentElements.airQualityStatus.innerText = status;
+    }
 }

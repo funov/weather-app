@@ -76,13 +76,13 @@ export class ForecastUpdater {
     getDayName(date) {
         let day = new Date(date);
         let days = [
-            "Воскресенье",
-            "Понедельник",
-            "Вторник",
-            "Среда",
-            "Четверг",
-            "Пятница",
-            "Суббота",
+            "Вс",
+            "Пн",
+            "Вт",
+            "Ср",
+            "Чт",
+            "Пт",
+            "Сб",
         ];
         return days[day.getDay()];
     }

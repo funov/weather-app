@@ -9,7 +9,6 @@
     <title>Weather App</title>
 </head>
 <body>
-<div class="body2"></div>
 <div class="wrapper">
     <div class="sidebar">
         <div>
@@ -109,6 +108,7 @@
                 <button class="week active">Неделя</button>
             </ul>
             <ul class="options units">
+                <p class="text-units">Метрика:</p>
                 <button class="celsius active">°C</button>
                 <button class="fahrenheit">°F</button>
             </ul>
@@ -117,6 +117,13 @@
         <div class="highlights">
             <h2 class="heading">Сейчас</h2>
             <div class="medium-cards">
+                <div class="medium-card">
+                    <h4 class="card-heading">Ощущается как</h4>
+                    <div class="content">
+                        <p class="feelsLike">0</p>
+{#                        <p class="feelsLike-status">Низкий</p>#}
+                    </div>
+                </div>
                 <div class="medium-card">
                     <h4 class="card-heading">UV Индекс</h4>
                     <div class="content">
@@ -146,6 +153,13 @@
                         <p class="humidity-status">Нормальная</p>
                     </div>
                 </div>
+                <div class="medium-card">
+                    <h4 class="card-heading">Качество воздуха</h4>
+                    <div class="content">
+                        <p class="airQuality">0</p>
+                        <p class="airQuality-status">Низкое</p>
+                    </div>
+                </div>
             </div>
             <div class="large-card">
                 <h4 class="card-heading">Карты</h4>
@@ -154,13 +168,6 @@
         </div>
     </div>
 </div>
-{#<div class="container">#}
-{#    <div class="spinner">#}
-{#        <div class="sun"></div>#}
-{#        <div class="moon"></div>#}
-{#    </div>#}
-{#</div>#}
-{#<div class="stars"></div>#}
 <div class="glow-box">
     <div class="glow-box-left">
         <div class="glow-left"></div>
