@@ -1,4 +1,10 @@
 import {DateTimeUpdater} from "./DateTimeUpdater.js";
+import {UnitUpdater} from "./UnitUpdater.js";
+import {
+    currentState
+} from "./index.js";
+
+let unitUpdater = new UnitUpdater();
 let dateTimeUpdater = new DateTimeUpdater();
 
 
@@ -32,13 +38,24 @@ class SidebarCardUpdater {
             .then((data) => {
                 let weather = data.currentConditions;
                 let time = dateTimeUpdater.getTimeByTimezone(this.timezone);
-                let temp = weather.temp;
-                let minTemp = data.days[0].tempmin;
-                let maxTemp = data.days[0].tempmax;
+                let temp;
+                let minTemp;
+                let maxTemp;
+                if (currentState.currentUnit === "c") {
+                    temp = Math.round(weather.temp);
+                    minTemp = Math.round(data.days[0].tempmin);
+                    maxTemp = Math.round(data.days[0].tempmax);
+                } else {
+                    temp = unitUpdater.celsiusToFahrenheit(weather.temp);
+                    minTemp = unitUpdater.celsiusToFahrenheit(data.days[0].tempmin);
+                    maxTemp = unitUpdater.celsiusToFahrenheit(data.days[0].tempmax);
+                }
                 document.getElementById(`${this.id}Date`).innerText = `${time}`;
-                document.getElementById(`${this.id}Temp`).innerText = temp;
-                document.getElementById(`${this.id}Max`).innerText = maxTemp;
-                document.getElementById(`${this.id}Min`).innerText = minTemp;
+                document.getElementById(`${this.id}Temp`).innerText = `${temp}°${currentState.currentUnit.toUpperCase()}`;
+                document.getElementById(`${this.id}Max`).innerText =
+                    `${maxTemp}°${currentState.currentUnit.toUpperCase()}`;
+                document.getElementById(`${this.id}Min`).innerText =
+                    `${minTemp}°${currentState.currentUnit.toUpperCase()}`;
                 setInterval(() => {
                     document.getElementById(`${this.id}Date`).innerText
                         = dateTimeUpdater.getTimeByTimezone(this.timezone);

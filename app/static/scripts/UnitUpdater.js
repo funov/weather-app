@@ -25,6 +25,6 @@ export class UnitUpdater {
     }
 
     celsiusToFahrenheit(temp) {
-        return ((temp * 9) / 5 + 32).toFixed(1);
+        return Math.round((temp * 9) / 5 + 32);
     }
 }

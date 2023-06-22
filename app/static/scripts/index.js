@@ -32,6 +32,7 @@ export let changeWeatherData = (city, unit, hourlyOrWeek) => {
         .then((data) => {
             let currentConditions = data.currentConditions;
             sidebarDataUpdater.updateData(data, currentConditions, unit);
+            sidebarCardsUpdater.UpdateData();
             mediumCardsUpdater.UpdateData(currentConditions);
             if (hourlyOrWeek === "hourly") {
                 forecastUpdater.renderForecastCards(data.days[0].hours, unit, hourlyOrWeek);
@@ -101,6 +102,6 @@ function getValue(e) {
     changeWeatherData(this.value, currentState.currentUnit, currentState.hourlyOrWeek);
 }
 
-sidebarCardsUpdater.UpdateData();
+
 geolocator.defineLocationByLatLon();
 
