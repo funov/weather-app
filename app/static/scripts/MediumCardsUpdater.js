@@ -7,17 +7,17 @@ let documentElements = new DocumentElements();
 export class MediumCardsUpdater{
     UpdateData(weather) {
         let statusUpdater = new StatusMediumCardsUpdater();
-        documentElements.uvIndex.innerText = `${weather.uvIndex}`;
-        let windSpeed = weather.windSpeed / 3.6;
-        documentElements.feelsLike.innerText = `${weather.feelsLike}`;
+        documentElements.uvIndex.innerText = `${weather.uvindex}`;
+        let windSpeed = weather.windspeed / 3.6;
+        documentElements.feelsLike.innerText = `${weather.feelslike}`;
         documentElements.windSpeed.innerText = `${Math.round(windSpeed)} м/с`;
         documentElements.humidity.innerText = `${weather.humidity} %`;
         documentElements.visibility.innerText = `${weather.visibility} км`;
-        documentElements.airQualityStatus.innerText = `${weather.airQualityStatus}`;
-        statusUpdater.updateAirQuality(weather.airQualityStatus);
+        documentElements.airQuality.innerText = `${weather.winddir}`;
+        statusUpdater.updateAirQuality(weather.winddir);
         statusUpdater.updateVisibility(weather.visibility);
         statusUpdater.updateHumidity(weather.humidity);
-        statusUpdater.updateUvIndex(weather.uvIndex);
+        statusUpdater.updateUvIndex(weather.uvindex);
         statusUpdater.updateWindSpeed(windSpeed);
     }
 }

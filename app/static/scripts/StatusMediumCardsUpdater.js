@@ -5,7 +5,7 @@ let documentElements = new DocumentElements();
 export class StatusMediumCardsUpdater {
     updateUvIndex(uvIndex) {
         let status;
-        switch (uvIndex) {
+        switch (true) {
             case uvIndex <= 2:
                 status = "Низкий";
                 break;
@@ -25,8 +25,8 @@ export class StatusMediumCardsUpdater {
     }
 
     updateHumidity(humidity) {
-        let status;
-        switch (humidity) {
+        let status = "Очень влажный воздух";
+        switch (true) {
             case humidity <= 30:
                 status = "Очень сухой воздух";
                 break;
@@ -39,16 +39,13 @@ export class StatusMediumCardsUpdater {
             case humidity < 85:
                 status = "Умеренно влажный воздух";
                 break;
-            default:
-                status = "Очень влажный воздух";
-                break
         }
         documentElements.humidityStatus.innerText = status;
     }
 
     updateVisibility(visibility) {
-        let status;
-        switch (visibility) {
+        let status = "Совершенно ясно";
+        switch (true) {
             case visibility <= 0.5:
                 status = "Густой туман";
                 break;
@@ -58,15 +55,13 @@ export class StatusMediumCardsUpdater {
             case visibility < 10:
                 status = "Дымка";
                 break;
-            default:
-                status = "Совершенно ясно";
         }
         documentElements.visibilityStatus.innerText = status;
     }
 
     updateWindSpeed(windSpeed) {
-        let status;
-        switch (windSpeed) {
+        let status = "Ураган";
+        switch (true) {
             case windSpeed <= 0.2:
                 status = "Штиль";
                 break;
@@ -100,15 +95,13 @@ export class StatusMediumCardsUpdater {
             case windSpeed <= 32.6:
                 status = "Жестокий шторм";
                 break;
-            default:
-                status = "Ураган";
         }
         documentElements.windSpeedStatus.innerText = status;
     }
 
     updateAirQuality(airQuality) {
-        let status;
-        switch (airQuality) {
+        let status = "Опасно";
+        switch (true) {
             case airQuality <= 50:
                 status = "Хорошо";
                 break;
@@ -124,8 +117,6 @@ export class StatusMediumCardsUpdater {
             case airQuality <= 300:
                 status = "Очень вредно";
                 break;
-            default:
-                status = "Опасно";
         }
         documentElements.airQualityStatus.innerText = status;
     }

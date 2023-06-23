@@ -23,12 +23,14 @@ let backgroundUpdater = new BackgroundUpdater();
 
 
 export let changeWeatherData = (city, unit, hourlyOrWeek) => {
+
     fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&lang=ru&key=EJ6UBL2JEQGYB3AA4ENASN62J&contentType=json`,
         {
             method: "GET",
             headers: {},
         })
-        .then((response) => response.json())
+        .then((response) =>
+            response.json())
         .then((data) => {
             let currentConditions = data.currentConditions;
             sidebarDataUpdater.updateData(data, currentConditions, unit);
@@ -42,9 +44,6 @@ export let changeWeatherData = (city, unit, hourlyOrWeek) => {
             currentState.timezone = data['timezone'];
             documentElements.date.innerText = dateTimeUpdater.getDateTimeByTimezone(currentState.timezone);
             backgroundUpdater.UpdateBackground(dateTimeUpdater.hour);
-        })
-        .catch((err) => {
-            alert(err);
         });
 }
 
@@ -87,6 +86,8 @@ documentElements.searchForm.addEventListener("submit", (e) => {
     if (location) {
         currentState.currentCity = location;
         changeWeatherData(location, currentState.currentUnit, currentState.hourlyOrWeek);
+    } else {
+        alert("Мы не смогли найти город с таким названием. Попробуй искать на английском языке.");
     }
 });
 
