@@ -1,17 +1,19 @@
 const fetchData = async (url) => {
     try {
         const response = await fetch(url);
-        console.log(response)
         let weather = await response.json();
         console.log(weather);
+        return weather;
     } catch (err) {
         console.log(err);
+        return null;
     }
 };
 
 ymaps.ready(init);
 let myMap, myPlacemark;
 
+// TODO °F
 function init() {
     myMap = new ymaps.Map("map", {
         center: [55.76, 37.64], zoom: 4
@@ -23,15 +25,17 @@ function init() {
 
     myMap.events.add('click', async function (e) {
         let coords = e.get('coords');
+        let weather = await fetchData(`/api/v1.0/now/byCoordinates?lat=${coords[0]}&lon=${coords[1]}`).then();
+        let balloonContent = `<div class="ymaps-balloon"><p class="ymaps-balloon-text">${weather.temperature}°C</p><img src="app/static/weather_icons/${weather.icon}.png" class="ymaps-balloon-icon"></div>`;
 
         if (myPlacemark) {
-            myPlacemark.geometry.setCoordinates(coords);
+            myMap.geoObjects.remove(myPlacemark);
+            myPlacemark = createPlacemark(coords, balloonContent);
+            myMap.geoObjects.add(myPlacemark);
         } else {
-            myPlacemark = createPlacemark(coords);
+            myPlacemark = createPlacemark(coords, balloonContent);
             myMap.geoObjects.add(myPlacemark);
         }
-
-        fetchData(`/api/v1.0/now/byCoordinates?lat=${coords[0]}&lon=${coords[1]}`).then();
     });
 
     myMap.controls.remove('geolocationControl');
@@ -43,9 +47,9 @@ function init() {
     myMap.controls.remove('rulerControl');
 }
 
-function createPlacemark(coords) {
+function createPlacemark(coords, balloonContent) {
     return new ymaps.Placemark(coords, {
-        hintContent: 'Метка', balloonContent: '☀️ 30°C'
+        hintContent: 'Нажми на меня😳', balloonContent: balloonContent
     }, {
         draggable: false
     });

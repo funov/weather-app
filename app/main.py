@@ -26,7 +26,7 @@ async def startup_event():
         weather_api_keys=weather_api_keys
     )
     weather_client = WeatherClient(weather_api_settings, app.logger)
-    weather_api_keys_refresher = WeatherApiKeysRefresher(weather_client.api_keys_manager)
+    weather_api_keys_refresher = WeatherApiKeysRefresher(weather_client.api_keys_manager, app.logger)
     app.state.weather_client = weather_client
     weather_api_keys_refresher.run()
 
@@ -34,7 +34,7 @@ async def startup_event():
 @app.get("/")
 async def root():
     # Jinja cannot be used 🫠🫠🫠
-    with open("templates/index.html", "r") as file:
+    with open("app/templates/index.html", "r") as file:
         html_content = file.read()
     return HTMLResponse(content=html_content, status_code=200)
 
