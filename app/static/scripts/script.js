@@ -45,7 +45,7 @@ function init() {
 
 function createPlacemark(coords) {
     return new ymaps.Placemark(coords, {
-        hintContent: 'Метка'
+        hintContent: 'Метка', balloonContent: '☀️ 30°C'
     }, {
         draggable: false
     });

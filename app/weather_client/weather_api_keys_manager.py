@@ -27,9 +27,10 @@ class WeatherApiKeysManager:
         self.logger.info('[WeatherApiKeysManager] Start refreshing api_keys')
 
         for i in range(len(self._weather_api_keys)):
-            _, _ = await self._priority_queue.get()
+            _ = await self._priority_queue.get()
 
         for weather_api_key in self._weather_api_keys:
+            self.logger.info(f'[WeatherApiKeysManager] {weather_api_key = } refreshed')
             await self._priority_queue.put((0, weather_api_key))
 
         self.logger.info('[WeatherApiKeysManager] Api_keys refreshed')

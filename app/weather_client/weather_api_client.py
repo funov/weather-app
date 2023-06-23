@@ -2,6 +2,8 @@ import httpx
 import logging
 from httpx import Response
 
+from app.weather_client.erros.all_api_keys_died_error import AllApiKeysDiedError
+from app.weather_client.erros.weather_not_found_error import WeatherNotFoundError
 from app.weather_client.weather_api_keys_manager import WeatherApiKeysManager
 from app.weather_client.weather_api_settings import WeatherApiSettings
 
@@ -9,9 +11,10 @@ from app.weather_client.weather_api_settings import WeatherApiSettings
 class WeatherClient:
     def __init__(self, weather_api_settings: WeatherApiSettings, logger: logging.Logger) -> None:
         self._elements = [
-            'timezone', 'temp', 'datetime', 'conditions', 'resolvedAddress', 'uvindex',
-            'visibility', 'humidity', 'windspeed', 'icon', 'feelslike', 'tempmin', 'tempmax', 'hours'
+            'timezone', 'temp', 'datetime', 'conditions', 'resolvedAddress', 'uvindex', 'visibility',
+            'humidity', 'windspeed', 'icon', 'feelslike', 'tempmin', 'tempmax', 'hours', 'winddir', 'days'
         ]
+        self.elements = ','.join(self._elements)
 
         self._weather_api_keys = weather_api_settings.weather_api_keys
         self._weather_api_url = weather_api_settings.weather_api_url
@@ -47,10 +50,8 @@ class WeatherClient:
         response = await self._send_weather_request(url, lang, unit_group)
         response_json = response.json()
         current_conditions = response_json['currentConditions']
+        today = response_json['days'][0]
 
-        # TODO
-        # + из today max и min temp
-        # winddir - air quality
         return {
             'timezone': response_json['timezone'],
             'location': response_json['resolvedAddress'],
@@ -61,33 +62,34 @@ class WeatherClient:
             'humidity': current_conditions['humidity'],
             'windSpeed': current_conditions['windspeed'],
             'icon': current_conditions['icon'],
-            'feelsLike': current_conditions['feelslike']
+            'feelsLike': current_conditions['feelslike'],
+            'temperatureMin': today['tempmin'],
+            'temperatureMax': today['tempmax'],
+            'airQuality': today['winddir']
         }
 
     async def _send_weather_request(self, url: str, lang: str, unit_group: str) -> Response:
         api_key = await self.api_keys_manager.get_api_key()
-        elements = ','.join(self._elements)
 
-        # TODO
         if api_key is None:
-            return {}
+            raise AllApiKeysDiedError("Api keys died, but they will be updated soon")
 
-        # TODO timeout
-        async with httpx.AsyncClient() as client:
-            response = await client.get(url, params={
-                'key': api_key,
-                'lang': lang,
-                'unitGroup': unit_group,
-                'elements': elements
-            })
+        try:
+            async with httpx.AsyncClient() as client:
+                response = await client.get(url, params={
+                    'key': api_key,
+                    'lang': lang,
+                    'unitGroup': unit_group,
+                    'elements': self.elements
+                })
+        except httpx.TimeoutException:
+            raise WeatherNotFoundError("Weather not found because of timeout")
 
-        # TODO
-        logging_url = f'{url}?key={api_key}&lang={lang}&unitGroup={unit_group}&elements={elements}'
+        logging_url = f'{url}?key={api_key}&lang={lang}&unitGroup={unit_group}&elements={self.elements}'
         self.logger.info(f'[WeatherApiClient] GET {logging_url} {response.http_version} {response.status_code}')
 
-        # TODO
         if response.status_code != 200:
-            return {}
+            raise WeatherNotFoundError("Weather api response status code not equal 200")
 
         return response
 
