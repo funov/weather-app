@@ -23,14 +23,19 @@ let backgroundUpdater = new BackgroundUpdater();
 
 
 export let changeWeatherData = (city, unit, hourlyOrWeek) => {
-
     fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&lang=ru&key=EJ6UBL2JEQGYB3AA4ENASN62J&contentType=json`,
         {
             method: "GET",
             headers: {},
         })
-        .then((response) =>
-            response.json())
+        .then((response) => {
+            if (!response.ok) {
+                alert("Мы не смогли найти твой город. Попробуй искать на английском языке");
+                return;
+            }
+
+            return response.json()
+        })
         .then((data) => {
             let currentConditions = data.currentConditions;
             sidebarDataUpdater.updateData(data, currentConditions, unit);

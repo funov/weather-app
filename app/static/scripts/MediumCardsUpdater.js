@@ -11,7 +11,7 @@ export class MediumCardsUpdater{
         let windSpeed = weather.windspeed / 3.6;
         documentElements.feelsLike.innerText = `${weather.feelslike}`;
         documentElements.windSpeed.innerText = `${Math.round(windSpeed)} м/с`;
-        documentElements.humidity.innerText = `${weather.humidity} %`;
+        documentElements.humidity.innerText = `${weather.humidity}%`;
         documentElements.visibility.innerText = `${weather.visibility} км`;
         documentElements.airQuality.innerText = `${weather.winddir}`;
         statusUpdater.updateAirQuality(weather.winddir);
