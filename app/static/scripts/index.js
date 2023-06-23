@@ -49,18 +49,19 @@ export let changeWeatherData = (city, unit, hourlyOrWeek) => {
 }
 
 export function getIcon(condition) {
-    if (condition === "partly-cloudy-day") {
-        return "https://i.ibb.co/PZQXH8V/27.png";
-    } else if (condition === "partly-cloudy-night") {
-        return "https://i.ibb.co/Kzkk59k/15.png";
-    } else if (condition === "rain") {
-        return "https://i.ibb.co/kBd2NTS/39.png";
-    } else if (condition === "clear-day") {
-        return "https://i.ibb.co/rb4rrJL/26.png";
-    } else if (condition === "clear-night") {
-        return "https://i.ibb.co/1nxNGHL/10.png";
-    } else {
-        return "https://i.ibb.co/rb4rrJL/26.png";
+    switch (condition) {
+        case "partly-cloudy-day":
+            return "https://i.ibb.co/PZQXH8V/27.png";
+        case "partly-cloudy-night":
+            return "https://i.ibb.co/Kzkk59k/15.png";
+        case "rain":
+            return "https://i.ibb.co/kBd2NTS/39.png";
+        case "clear-day":
+            return "https://i.ibb.co/rb4rrJL/26.png";
+        case "clear-night":
+            return "https://i.ibb.co/1nxNGHL/10.png";
+        default:
+            return "https://i.ibb.co/rb4rrJL/26.png";
     }
 }
 
