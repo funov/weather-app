@@ -1,9 +1,9 @@
 import logging
 from os import environ
 
-from fastapi import FastAPI, Request, HTTPException
+from fastapi import FastAPI, HTTPException
+from starlette.responses import HTMLResponse
 from starlette.staticfiles import StaticFiles
-from starlette.templating import Jinja2Templates
 
 from app.weather_client.weather_api_keys_refresher import WeatherApiKeysRefresher
 from app.weather_client.weather_api_settings import WeatherApiSettings
@@ -15,7 +15,6 @@ app = FastAPI()
 
 app.logger = logging.getLogger("uvicorn")
 app.mount("/app/static", StaticFiles(directory="app/static"), name="static")
-templates = Jinja2Templates(directory="app/templates")
 
 
 @app.on_event("startup")
@@ -33,8 +32,11 @@ async def startup_event():
 
 
 @app.get("/")
-async def root(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+async def root():
+    # Jinja cannot be used 🫠🫠🫠
+    with open("templates/index.html", "r") as file:
+        html_content = file.read()
+    return HTMLResponse(content=html_content, status_code=200)
 
 
 @app.get("/api/v1.0/nextWeek/byLocation")
