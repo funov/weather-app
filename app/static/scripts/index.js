@@ -54,18 +54,49 @@ export let changeWeatherData = (city, unit, hourlyOrWeek) => {
 
 export function getIcon(condition) {
     switch (condition) {
+        case "snow":
+        case "snow-showers-day":
+            return "../icons/sun/Snow.png";
+        case "snow-showers-night": {
+            let random = 2 * Math.random() + Math.random();
+            while (random > 2) {
+                random = 2 * Math.random() + Math.random();
+            }
+            if (random === 0)
+                return "../icons/moon/SnowShowersNight.png";
+            else if (random === 1)
+                return "../icons/moon/SnowShowersNight2.png";
+            return "../icons/moon/SnowShowersNight3.png";
+        }
+        case "thunder-rain":
+        case "thunder-showers-day":
+            return "../icons/sun/ThunderShowersDay.png";
+        case "thunder-showers-night": {
+            let random = Math.random();
+            return random === 0 ? "../icons/moon/ThunderShowersNight.png" : "../icons/moon/ThunderShowersNight2.png";
+        }
+        case "showers-day":
+            return "../icons/sun/ShowersDay.png";
+        case "showers-night":
+            return "../icons/moon/ShowersNight.png";
+        case "fog":
+            return "../icons/cloud/Cloudy.png";
+        case "wind":
+            return "../icons/sun/Wind.png";
+        case "cloudy":
+            return "../icons/cloud/Cloudy.png";
         case "partly-cloudy-day":
-            return "https://i.ibb.co/PZQXH8V/27.png";
-        case "partly-cloudy-night":
-            return "https://i.ibb.co/Kzkk59k/15.png";
+            return "../icons/sun/PartlyCloudyDay.png";
+        case "partly-cloudy-night": {
+            let random = Math.random();
+            return random === 0 ? "../icons/sun/PartlyCloudyNight.png" : "../icons/sun/PartlyCloudyNight2.png";
+        }
         case "rain":
-            return "https://i.ibb.co/kBd2NTS/39.png";
+            return "../icons/rain/Rain.png";
         case "clear-day":
-            return "https://i.ibb.co/rb4rrJL/26.png";
+            return "../icons/sun/ClearDay.png";
         case "clear-night":
-            return "https://i.ibb.co/1nxNGHL/10.png";
-        default:
-            return "https://i.ibb.co/rb4rrJL/26.png";
+            return "../icons/star/ClearNight.png";
     }
 }
 
