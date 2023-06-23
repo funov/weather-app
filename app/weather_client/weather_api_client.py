@@ -1,7 +1,7 @@
 import httpx
 import logging
+import asyncio
 from httpx import Response
-
 from app.weather_client.erros.all_api_keys_died_error import AllApiKeysDiedError
 from app.weather_client.erros.weather_not_found_error import WeatherNotFoundError
 from app.weather_client.weather_api_keys_manager import WeatherApiKeysManager
@@ -20,6 +20,11 @@ class WeatherClient:
         self._weather_api_url = weather_api_settings.weather_api_url
         self.api_keys_manager = WeatherApiKeysManager(self._weather_api_keys, logger)
         self.logger = logger
+        # TODO test this
+        self.http_client = httpx.AsyncClient()
+
+    def __del__(self):
+        asyncio.run(self.http_client.aclose())
 
     async def get_next_week_weather(self, location: str, lang: str = 'ru', unit_group: str = 'metric') -> dict:
         url = f'{self._weather_api_url}/{location}/next7days'
@@ -75,13 +80,12 @@ class WeatherClient:
             raise AllApiKeysDiedError("Api keys died, but they will be updated soon")
 
         try:
-            async with httpx.AsyncClient() as client:
-                response = await client.get(url, params={
-                    'key': api_key,
-                    'lang': lang,
-                    'unitGroup': unit_group,
-                    'elements': self.elements
-                })
+            response = await self.http_client.get(url, params={
+                'key': api_key,
+                'lang': lang,
+                'unitGroup': unit_group,
+                'elements': self.elements
+            })
         except httpx.TimeoutException:
             raise WeatherNotFoundError("Weather not found because of timeout")
 
