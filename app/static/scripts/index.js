@@ -61,47 +61,47 @@ export function getIcon(condition) {
     switch (condition) {
         case "snow":
         case "snow-showers-day":
-            return "../icons/sun/Snow.png";
+            return "app/static/icons/sun/Snow.png";
         case "snow-showers-night": {
             let random = 2 * Math.random() + Math.random();
             while (random > 2) {
                 random = 2 * Math.random() + Math.random();
             }
             if (random === 0)
-                return "../icons/moon/SnowShowersNight.png";
+                return "app/static/icons/moon/SnowShowersNight.png";
             else if (random === 1)
-                return "../icons/moon/SnowShowersNight2.png";
-            return "../icons/moon/SnowShowersNight3.png";
+                return "app/static/icons/moon/SnowShowersNight2.png";
+            return "app/static/icons/moon/SnowShowersNight3.png";
         }
         case "thunder-rain":
         case "thunder-showers-day":
-            return "../icons/sun/ThunderShowersDay.png";
+            return "app/static/icons/sun/ThunderShowersDay.png";
         case "thunder-showers-night": {
             let random = Math.random();
-            return random === 0 ? "../icons/moon/ThunderShowersNight.png" : "../icons/moon/ThunderShowersNight2.png";
+            return random === 0 ? "app/static/icons/moon/ThunderShowersNight.png" : "app/static/icons/moon/ThunderShowersNight2.png";
         }
         case "showers-day":
-            return "../icons/sun/ShowersDay.png";
+            return "app/static/icons/sun/ShowersDay.png";
         case "showers-night":
-            return "../icons/moon/ShowersNight.png";
+            return "app/static/icons/moon/ShowersNight.png";
         case "fog":
-            return "../icons/cloud/Cloudy.png";
+            return "app/static/icons/cloud/Cloudy.png";
         case "wind":
-            return "../icons/sun/Wind.png";
+            return "app/static/icons/sun/Wind.png";
         case "cloudy":
-            return "../icons/cloud/Cloudy.png";
+            return "app/static/icons/cloud/Cloudy.png";
         case "partly-cloudy-day":
-            return "../icons/sun/PartlyCloudyDay.png";
+            return "app/static/icons/sun/PartlyCloudyDay.png";
         case "partly-cloudy-night": {
             let random = Math.random();
-            return random === 0 ? "../icons/sun/PartlyCloudyNight.png" : "../icons/sun/PartlyCloudyNight2.png";
+            return random === 0 ? "app/static/icons/moon/PartlyCloudyNight.png" : "app/static/icons/moon/PartlyCloudyNight2.png";
         }
         case "rain":
-            return "../icons/rain/Rain.png";
+            return "app/static/icons/rain/Rain.png";
         case "clear-day":
-            return "../icons/sun/ClearDay.png";
+            return "app/static/icons/sun/ClearDay.png";
         case "clear-night":
-            return "../icons/star/ClearNight.png";
+            return "app/static/icons/star/ClearNight.png";
     }
 }
 

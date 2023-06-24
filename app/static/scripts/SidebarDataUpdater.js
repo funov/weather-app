@@ -15,6 +15,7 @@ export class SidebarDataUpdater {
         } else {
             documentElements.temp.innerText = unitUpdater.celsiusToFahrenheit(currentConditions.temp);
         }
+        console.log(currentConditions.icon);
         documentElements.mainIcon.src = getIcon(currentConditions.icon);
     }
 }

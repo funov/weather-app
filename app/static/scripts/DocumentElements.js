@@ -36,4 +36,7 @@ export class DocumentElements {
     weekCards = document.querySelector('.week-cards');
     mediumCards = document.querySelector('.medium-cards');
     mediumCardsMobile = document.querySelector('.medium-cards-mobile');
+    airQualityMobile = document.querySelector('.airQuality-mobile');
+    feelsLikeMobile = document.querySelector('.feelsLike-mobile');
+
 }
