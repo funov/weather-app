@@ -12,7 +12,11 @@ let unitUpdater = new UnitUpdater();
 
 export class ForecastUpdater {
     renderForecastCards(data, unit, type) {
-        documentElements.weatherCards.innerHTML = "";
+        this.createCards(data, unit, type, documentElements.weatherCards);
+    }
+
+    createCards(data, unit, type, elem, mobile=false){
+        elem.innerHTML = "";
         let day = 0;
         let numCards;
         if (type === "hourly") {
@@ -40,17 +44,24 @@ export class ForecastUpdater {
             }
             card.innerHTML = `
                     <h2 class="day-name">${dayName}</h2>
-                <div class="card-icon">
-                    <img src="${iconSrc}" class="day-icon" alt="" />
-                </div>
-                <div class="day-temp">
-                  <h2 class="temp">${dayTemp}</h2>
-                  <span class="temp-unit">${tempUnit}</span>
-                </div>`;
-            documentElements.weatherCards.appendChild(card);
+                    <div class="card-icon">
+                        <img src="${iconSrc}" class="day-icon" alt="" />
+                    </div>
+                    <div class="day-temp">
+                      <h2 class="temp">${dayTemp}</h2>
+                      <span class="temp-unit">${tempUnit}</span>
+                    </div>`;
+
+            elem.appendChild(card);
+            if (mobile && i !== numCards - 1){
+                let div = document.createElement('div');
+                div.classList.add('vert-divider');
+                elem.appendChild(div);
+            }
             day++;
         }
     }
+
 
     changeForecast(unit) {
         if (currentState.hourlyOrWeek !== unit) {

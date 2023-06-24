@@ -26,7 +26,7 @@ class SidebarCardUpdater {
         this.city = city;
         this.timezone = timezone;
         this.id = id;
-        this.url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&key=EJ6UBL2JEQGYB3AA4ENASN62J&contentType=json`;
+        this.url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&key=KH9Z3HUWAP52MDB7LBFC88FH5&contentType=json`;
     }
 
     async UpdateCard() {

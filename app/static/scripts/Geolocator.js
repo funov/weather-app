@@ -9,7 +9,7 @@ export class Geolocator {
             function (position) {
                 let lat = position.coords.latitude;
                 let lon = position.coords.longitude;
-                fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${lat},${lon}?unitGroup=us&key=EJ6UBL2JEQGYB3AA4ENASN62J&contentType=json`,
+                fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${lat},${lon}?unitGroup=us&key=KH9Z3HUWAP52MDB7LBFC88FH5&contentType=json`,
                     {
                         method: "GET",
                         headers: {},

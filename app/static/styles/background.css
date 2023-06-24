@@ -207,30 +207,24 @@
 }
 
 .glow-box {
+    overflow-y: hidden;
     display: flex;
-    justify-content: space-between;
-    height: 12.8em;
+    height: 6.8em;
     width: 100%;
 }
 
 .glow-box-left {
-    display: flex;
     position: relative;
-    height: 12.8em;
-    width: 80em;
-    overflow: hidden;
-    left: -9em;
-    bottom: 0;
+    overflow-x: visible;
+    left: -5em;
+    bottom: 1em;
 }
 
 .glow-box-right {
-    display: flex;
     position: relative;
-    height: 12.8em;
     width: 60em;
-    overflow: hidden;
-    left: 4em;
-    bottom: 0;
+    left: 25em;
+    bottom: -0.5em;
 }
 
 .glow-left {
@@ -249,8 +243,8 @@
     position: relative;
     background-color: rgba(255, 255, 255, 0.18);
     border-radius: 50%;
-    bottom: -4em;
-    left: 10em;
+    bottom: -1em;
+    left: 0;
     animation: float 5s infinite;
 }
 
@@ -270,6 +264,7 @@
 }
 
 .glow-right:after {
+    overflow-x: visible;
     right: -13.6em;
     top: -1.3em;
     width: 30.8em;
@@ -365,8 +360,8 @@
     }
 }
 
-@media screen and (min-width: 600px) {
-    .container {
-        font-size: 20px;
-    }
-}
+/*@media screen and (min-width: 600px) {*/
+/*    .container {*/
+/*        font-size: 20px;*/
+/*    }*/
+/*}*/

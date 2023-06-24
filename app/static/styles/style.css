@@ -16,9 +16,9 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    min-height: 100vh;
-    min-width: 1000px;
-    padding: 50px 50px 0 50px;
+    /*min-height: 100vh;*/
+    /*min-width: 1000px;*/
+    /*padding: 50px 50px 0 50px;*/
     background: var(--primary-color);
     /*background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));*/
     /*background-size: cover;*/
@@ -33,14 +33,15 @@ img {
 .wrapper {
     display: flex;
     width: 1200px;
-    min-width: 900px;
+    /*min-width: 900px;*/
     border-radius: 20px;
     overflow: hidden;
+    margin: 50px;
 }
 
 .sidebar {
     width: 30%;
-    min-width: 250px;
+    /*min-width: 250px;*/
     padding: 20px;
     background: rgba(255, 255, 255, 0.815);
     display: flex;
@@ -178,7 +179,7 @@ img {
 
 .main {
     width: 100%;
-    min-width: 400px;
+    min-width: 350px;
     padding: 20px 40px;
     background-color: #f6f6f8;
     position: relative;
@@ -338,6 +339,7 @@ img {
     display: flex;
     flex-direction: column;
     margin-top: 10px;
+    margin-bottom: 30px;
 }
 
 .large-card .card-heading {
@@ -424,7 +426,7 @@ img {
 }
 
 .minor-data img{
-    opacity: 70%;
+    opacity: 50%;
     margin-top: 5px;
     height: 14px;
     width: 15px;
@@ -434,8 +436,383 @@ img {
     font-size: 15px;
 }
 
-
-.break-column {
-    flex-basis: 100%;
-    width: 0;
+.week-cards{
+    display: none;
 }
+.today-cards{
+    display: none;
+}
+
+/*.sidebar .medium-cards{*/
+/*    display: none;*/
+/*}*/
+
+.medium-cards-mobile {
+    display: none;
+}
+.large-card-mobile {
+    display: none;
+}
+
+
+@media (min-width: 320px) and (max-width: 599px) {
+    .large-card-mobile{
+        padding: 10px;
+        display: flex;
+        margin-top: 10px;
+        height: 200px;
+        background-color: rgba(243,243,243,0.33);
+        border-radius: 10px;
+    }
+    .large-card-mobile .card-heading {
+        font-size: 13px;
+        color: rgba(243,243,243,0.53);
+    }
+    .wrapper{
+        margin: calc(20px + (50 - 20) * ((100vw - 320px) / (600 - 320)));
+    }
+    .search{
+        filter: brightness(0.93);
+    }
+    .card .card-icon{
+        width: 25px;
+    }
+    .medium-cards-mobile{
+        justify-content: center;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .medium-card-mobile {
+        flex-direction: column;
+        width: calc(130px + (245 - 130) * ((100vw - 320px) / (600 - 320)));
+        height: 110px;
+        border-radius: 10px;
+        color: rgba(243,243,243,0.83);
+        background-color: rgba(243,243,243,0.33);
+        padding: 5px 10px;
+        display: flex;
+    }
+
+    .medium-card-mobile .card-heading-mobile {
+        font-size: 12px;
+        color: rgba(243,243,243,0.53)
+    }
+
+    .medium-card-mobile .content-mobile {
+        margin-top: 5px;
+    }
+
+    .medium-card-mobile .content-mobile p:first-child {
+        text-align: center;
+        font-size: 30px;
+    }
+
+    .medium-card-mobile .content-mobile p:nth-child(2) {
+        font-size: 10px;
+        margin-top: 9px;
+        text-align: left;
+    }
+    .sidebar{
+        padding: 0;
+    }
+    .description{
+        color: rgba(243,243,243,0.83);
+    }
+    .temperature{
+        color: rgba(243,243,243,0.83);
+    }
+    .date-time{
+        color: rgba(243,243,243,0.83);
+    }
+    .location{
+        color: rgba(243,243,243,0.83);
+        display: flex;
+        font-size: 13px;
+        margin-top: 30px;
+        margin-bottom: 10px;
+    }
+    .today-cards{
+        gap: 4px;
+        overflow-x: scroll;
+        white-space: nowrap;
+        display: flex;
+        border-radius: 10px;
+        background: rgba(243,243,243,0.33);
+        margin-top: 10px;
+        height: 80px;
+    }
+    .vert-divider{
+        margin-top: 3px;
+        width: 1px;
+        height: 85%;
+        background-color: rgba(243,243,243,0.23);
+    }
+    .week-cards{
+        justify-content: space-between;
+        display: flex;
+        border-radius: 10px;
+        background: rgba(243,243,243,0.33);
+        margin-top: 10px;
+        height: 80px;
+    }
+    .today-cards .card{
+        padding: 1px 5px;
+        color: rgba(243,243,243,0.73);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 80px;
+        width: 40px;
+    }
+    .week-cards .card{
+        justify-content: space-between;
+        color: rgba(243,243,243,0.73);
+        display: flex;
+        flex-direction: column;
+        height: 80px;
+        width: calc(40px + (80 - 40) * ((100vw - 320px) / (600 - 320)));
+    }
+
+    .card h2 {
+        text-align: center;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .main{
+        display: none;
+    }
+    .sidebar{
+        background: none;
+        width: 100%;
+    }
+    .weather-icon{
+        display: none;
+    }
+    .temperature{
+        margin-top: calc(0px + (60 - 0) * ((100vw - 320px) / (599 - 320)));
+        justify-content: center;
+        margin-bottom: 35px;
+    }
+    .divider{
+        margin-top: 10px;
+    }
+    .sidebar-cards{
+        display: none;
+    }
+}
+
+@media (min-width: 600px) and (max-width: 900px) {
+    .wrapper{
+        margin: calc(20px + (50 - 20) * ((100vw - 600px) / (900 - 600)));
+    }
+    .search{
+        margin-top: calc(15px + (20 - 15) * ((100vw - 600px) / (900 - 600)));
+    }
+    .search input{
+        height: calc(35px + (40 - 35) * ((100vw - 600px) / (900 - 600)));
+        font-size: calc(12px + (14 - 12) * ((100vw - 600px) / (900 - 600)));;
+    }
+    .search button{
+        min-width: calc(35px + (40 - 35) * ((100vw - 600px) / (900 - 600)));
+        height: calc(35px + (40 - 35) * ((100vw - 600px) / (900 - 600)));
+    }
+    #search-button img{
+        width: calc(15px + (20 - 15) * ((100vw - 600px) / (900 - 600)));
+        height: calc(15px + (20 - 15) * ((100vw - 600px) / (900 - 600)));
+    }
+    .weather-icon{
+        height: calc(130px + (150 - 130) * ((100vw - 600px) / (900 - 600)));
+        margin-bottom: calc(30px + (100 - 30) * ((100vw - 600px) / (900 - 600)));
+    }
+    .temperature #temp{
+        font-size: calc(50px + (70 - 50) * ((100vw - 600px) / (900 - 600)));
+    }
+    .temperature span{
+        font-size: calc(32px + (40 - 32) * ((100vw - 600px) / (900 - 600)));
+        margin-top: calc(-7px + (-10 - (-7)) * ((100vw - 600px) / (900 - 600)));
+    }
+    .divider{
+        margin-top: calc(15px + (20 - 15) * ((100vw - 600px) / (900 - 600)));
+    }
+    .description{
+        font-size: calc(11px + (12 - 11) * ((100vw - 600px) / (900 - 600)));
+    }
+    .sidebar-cards{
+        margin-top: calc(23px + (28 - 23) * ((100vw - 600px) / (900 - 600)));
+    }
+    #sidebar-card{
+        height: calc(50px + (60 - 50) * ((100vw - 600px) / (900 - 600)));
+    }
+    .main-data{
+        height: calc(63% + (60% - 63%) * ((100vw - 600px) / (900 - 600)));
+    }
+    .main-data .city{
+        text-align: left;
+        gap: calc(2px + (0 - 2) * ((100vw - 600px) / (900 - 600)));
+        width: 65px;
+        padding: 0 7px 0 0;
+        margin-left: calc(3px + (5 - 3) * ((100vw - 600px) / (900 - 600)));
+    }
+    .main-data .city .name{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-top: calc(-7px + (-3 - (-7)) * ((100vw - 600px) / (900 - 600)));
+        font-size: calc(14px + (15 - 14) * ((100vw - 600px) / (900 - 600)));
+    }
+    .main-data .temperature{
+        margin-top: calc(2px + (0 - 2) * ((100vw - 600px) / (900 - 600)));
+    }
+    .main-data .temperature .temp {
+        font-size: calc(22px + (30 - 22) * ((100vw - 600px) / (900 - 600)));
+    }
+    .minor-data img {
+        height: calc(12px + (14 - 12) * ((100vw - 600px) / (900 - 600)));
+        width: calc(13px + (15 - 13) * ((100vw - 600px) / (900 - 600)));
+    }
+    .minor-data p {
+        margin-top: calc(3px + (0 - 3) * ((100vw - 600px) / (900 - 600)));
+        font-size: calc(15px + (15 - 12) * ((100vw - 600px) / (900 - 600)));
+    }
+    .location{
+        font-size: calc(11px + (14 - 11) * ((100vw - 600px) / (900 - 600)));
+    }
+
+    .main{
+        padding: 20px calc(20px + (25 - 20) * ((100vw - 600px) / (900 - 600))) calc(80px + (0 - 80) * ((100vw - 600px) / (900 - 600)));
+    }
+    .main nav .options{
+        gap: calc(20px + (20 - 10) * ((100vw - 600px) / (900 - 600)));
+    }
+    .main nav .options button {
+        font-size: calc(14px + (16 - 14) * ((100vw - 600px) / (900 - 600)));
+    }
+    .main nav .units button {
+        width: calc(30px + (40 - 30) * ((100vw - 600px) / (900 - 600)));
+        height: calc(30px + (40 - 30) * ((100vw - 600px) / (900 - 600)));
+    }
+    .main .cards {
+        gap: calc(9px + (10 - 9) * ((100vw - 600px) / (900 - 600)));
+        margin-top: calc(15px + (20 - 15) * ((100vw - 600px) / (900 - 600)));
+    }
+    .cards .card {
+        width: calc(43px + (69 - 43) * ((100vw - 600px) / (900 - 600)));
+        height: calc(80px + (120 - 80) * ((100vw - 600px) / (900 - 600)));
+    }
+    .card h2{
+        font-size: calc(11px + (15 - 11) * ((100vw - 600px) / (900 - 600)));
+    }
+    .card .day-temp {
+        font-size: calc(8px + (12 - 8) * ((100vw - 600px) / (900 - 600)));
+    }
+
+    .highlights {
+        gap: 1px;
+        margin-top: calc(20px + (30 - 20) * ((100vw - 600px) / (900 - 600)));
+    }
+    .highlights .heading{
+        font-size: calc(15px + (20 - 15) * ((100vw - 600px) / (900 - 600)));
+    }
+
+    .medium-cards{
+        gap: calc(10px + (20 - 10) * ((100vw - 600px) / (900 - 600)));
+        margin-top: calc(20px + (30 - 20) * ((100vw - 600px) / (900 - 600)));
+    }
+    .medium-card{
+        width: calc(110px + (168 - 110) * ((100vw - 600px) / (900 - 600)));
+        height: calc(85px + (90 - 85) * ((100vw - 600px) / (900 - 600)));
+        padding: 10px calc(5px + (18 - 5) * ((100vw - 600px) / (900 - 600)));
+    }
+
+    .medium-card .content {
+        margin-top: calc(2px + (10 - 2) * ((100vw - 600px) / (900 - 600)));
+    }
+
+    .medium-card .content p:first-child {
+        font-size: calc(19px + (20 - 19) * ((100vw - 600px) / (900 - 600)));
+    }
+    .medium-card .content p:nth-child(2) {
+        font-size: calc(8px + (9 - 8) * ((100vw - 600px) / (900 - 600)));
+        margin-top: calc(4px + (5 - 4) * ((100vw - 600px) / (900 - 600)));
+    }
+
+    .medium-card h4{
+        font-size: calc(9px + (10 - 9) * ((100vw - 600px) / (900 - 600)));
+    }
+
+    .sidebar{
+        padding: calc(12px + (20 - 12) * ((100vw - 600px) / (900 - 600)));
+    }
+    .large-card{
+        height: calc(190px + (340 - 190) * ((100vw - 600px) / (900 - 600)));
+    }
+    .large-card .heading{
+        font-size: calc(11px + (16 - 11) * ((100vw - 600px) / (900 - 600)));
+    }
+
+}
+
+@media (min-width: 901px) and (max-width: 1200px) {
+    .highlights{
+        margin-top: calc(30px + (50 - 30) * ((100vw - 900px) / (1200 - 900)));
+    }
+    .cards .card{
+        width: calc(69px + (91 - 69) * ((100vw - 900px) / (1200 - 900)));
+        height: calc(120px + (130 - 120) * ((100vw - 900px) / (1200 - 900)));
+    }
+    .main .cards{
+        gap: calc(10px + (20 - 10) * ((100vw - 900px) / (1200 - 900)));
+        margin-top: calc(20px + (30 - 20) * ((100vw - 600px) / (900 - 600)));
+    }
+    .main{
+        padding: 20px calc(25px + (40 - 25) * ((100vw - 900px) / (1200 - 900)));
+    }
+    .medium-cards{
+        margin-top: calc(30px + (50 - 30) * ((100vw - 900px) / (1200 - 900)));
+    }
+    .medium-card{
+        width: calc(168px + (240 - 168) * ((100vw - 900px) / (1200 - 900)));
+        height: calc(90px + (130 - 90) * ((100vw - 900px) / (1200 - 900)));
+        padding: 10px calc(18px + (20 - 18) * ((100vw - 900px) / (1200 - 900)));
+    }
+    .medium-card .content {
+        margin-top: calc(10px + (20 - 10) * ((100vw - 900px) / (1200 - 900)));
+    }
+
+    .medium-card .content p:first-child {
+        font-size: calc(20px + (22 - 20) * ((100vw - 900px) / (1200 - 900)));
+    }
+
+    .medium-card .content p:nth-child(2) {
+        font-size: calc(9px + (12 - 9) * ((100vw - 900px) / (1200 - 900)));
+        margin-top: calc(5px + (20 - 5) * ((100vw - 900px) / (1200 - 900)));
+    }
+
+    .medium-card h4{
+        font-size: calc(10px + (16 - 10) * ((100vw - 900px) / (1200 - 900)));
+    }
+
+    .main-data .city{
+        text-align: left;
+        width: 100px;
+        padding: 0 1px 0 0;
+        display: flex;
+        flex-direction: column;
+        margin-left: 10px;
+    }
+    .main-data .city .name{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .wrapper{
+        margin: calc(20px + (50 - 20) * ((100vw - 320px) / (1200 - 320)));
+    }
+}
+
+

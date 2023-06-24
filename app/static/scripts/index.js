@@ -23,7 +23,7 @@ let backgroundUpdater = new BackgroundUpdater();
 
 
 export let changeWeatherData = (city, unit, hourlyOrWeek) => {
-    fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&lang=ru&key=EJ6UBL2JEQGYB3AA4ENASN62J&contentType=json`,
+    fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&lang=ru&key=KH9Z3HUWAP52MDB7LBFC88FH5&contentType=json`,
         {
             method: "GET",
             headers: {},
@@ -31,14 +31,19 @@ export let changeWeatherData = (city, unit, hourlyOrWeek) => {
         .then((response) => response.json())
         .then((data) => {
             let currentConditions = data.currentConditions;
-            sidebarDataUpdater.updateData(data, currentConditions, unit);
+            forecastUpdater.createCards(data.days[0].hours, 'c', "hourly", documentElements.todayCards,true);
+            forecastUpdater.createCards(data.days, 'c', 'week', documentElements.weekCards,true);
+
             sidebarCardsUpdater.UpdateData();
-            mediumCardsUpdater.UpdateData(currentConditions);
+            mediumCardsUpdater.UpdateData(currentConditions, documentElements.mediumCardsMobile);
+            mediumCardsUpdater.UpdateData(currentConditions, documentElements.mediumCards);
             if (hourlyOrWeek === "hourly") {
                 forecastUpdater.renderForecastCards(data.days[0].hours, unit, hourlyOrWeek);
             } else {
                 forecastUpdater.renderForecastCards(data.days, unit, hourlyOrWeek);
             }
+
+            sidebarDataUpdater.updateData(data, currentConditions, unit);
             currentState.timezone = data['timezone'];
             documentElements.date.innerText = dateTimeUpdater.getDateTimeByTimezone(currentState.timezone);
             backgroundUpdater.UpdateBackground(dateTimeUpdater.hour);
@@ -104,4 +109,3 @@ function getValue(e) {
 
 
 geolocator.defineLocationByLatLon();
-

@@ -13,7 +13,16 @@ export class DocumentElements {
     humidityStatus = document.querySelector(".humidity-status");
     visibilityStatus = document.querySelector(".visibility-status");
     windSpeedStatus = document.querySelector(".windSpeed-status");
-    airQualityStatus = document.querySelector(".airQuality-status");
+    airQualityStatus = document.querySelector(".airQuality-status-mobile");
+    uvIndexMobile = document.querySelector(".uvIndex-mobile");
+    windSpeedMobile = document.querySelector(".windSpeed-mobile");
+    humidityMobile = document.querySelector(".humidity-mobile");
+    visibilityMobile = document.querySelector(".visibility-mobile");
+    uvIndexStatusMobile = document.querySelector(".uvIndex-status-mobile");
+    humidityStatusMobile = document.querySelector(".humidity-status-mobile");
+    visibilityStatusMobile = document.querySelector(".visibility-status-mobile");
+    windSpeedStatusMobile = document.querySelector(".windSpeed-status-mobile");
+    airQualityStatusMobile = document.querySelector(".airQuality-status-mobile");
     searchForm = document.querySelector("#search");
     search = document.querySelector("#query");
     celsiusBtn = document.querySelector(".celsius");
@@ -22,4 +31,8 @@ export class DocumentElements {
     hourlyBtn = document.querySelector(".hourly");
     weekBtn = document.querySelector(".week");
     weatherCards = document.querySelector("#weather-cards");
+    todayCards = document.querySelector('.today-cards');
+    weekCards = document.querySelector('.week-cards');
+    mediumCards = document.querySelector('.medium-cards');
+    mediumCardsMobile = document.querySelector('.medium-cards-mobile');
 }

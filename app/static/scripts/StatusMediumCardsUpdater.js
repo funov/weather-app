@@ -1,9 +1,5 @@
-import {DocumentElements} from "./DocumentElements.js";
-
-let documentElements = new DocumentElements();
-
 export class StatusMediumCardsUpdater {
-    updateUvIndex(uvIndex) {
+    updateUvIndex(uvIndex, elem) {
         let status;
         if (uvIndex <= 2) {
             status = "Низкий";
@@ -16,10 +12,10 @@ export class StatusMediumCardsUpdater {
         } else {
             status = "Крайне высокий";
         }
-        documentElements.uvIndexStatus.innerText = status;
+        elem.innerText = status;
     }
 
-    updateHumidity(humidity) {
+    updateHumidity(humidity, elem) {
         let status;
         if (humidity <= 30) {
             status = "Очень сухой воздух";
@@ -32,10 +28,10 @@ export class StatusMediumCardsUpdater {
         } else {
             status = "Очень влажный воздух";
         }
-        documentElements.humidityStatus.innerText = status;
+        elem.innerText = status;
     }
 
-    updateVisibility(visibility) {
+    updateVisibility(visibility, elem) {
         let status;
         if (visibility <= 0.5) {
             status = "Густой туман";
@@ -46,10 +42,10 @@ export class StatusMediumCardsUpdater {
         } else {
             status = "Совершенно ясно";
         }
-        documentElements.visibilityStatus.innerText = status;
+        elem.innerText = status;
     }
 
-    updateWindSpeed(windSpeed) {
+    updateWindSpeed(windSpeed, elem) {
         let status;
         if (windSpeed <= 0.2) {
             status = "Штиль";
@@ -76,10 +72,10 @@ export class StatusMediumCardsUpdater {
         } else {
             status = "Ураган";
         }
-        documentElements.windSpeedStatus.innerText = status;
+        elem.innerText = status;
     }
 
-    updateAirQuality(airQuality) {
+    updateAirQuality(airQuality, elem) {
         let status;
         if (airQuality <= 50) {
             status = "Хорошо";
@@ -94,6 +90,6 @@ export class StatusMediumCardsUpdater {
         } else {
             status = "Опасно";
         }
-        documentElements.airQualityStatus.innerText = status;
+        elem.innerText = status;
     }
 }

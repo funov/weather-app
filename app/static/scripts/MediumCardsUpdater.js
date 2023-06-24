@@ -2,18 +2,36 @@ import {StatusMediumCardsUpdater} from "./StatusMediumCardsUpdater.js";
 import {DocumentElements} from "./DocumentElements.js";
 
 let documentElements = new DocumentElements();
+let statusUpdater = new StatusMediumCardsUpdater();
 
 export class MediumCardsUpdater{
     UpdateData(weather) {
-        let statusUpdater = new StatusMediumCardsUpdater();
-        documentElements.uvIndex.innerText = weather.uvindex;
+        this.UpdateWindSpeed(weather, documentElements.windSpeed, documentElements.windSpeedStatus);
+        this.UpdateHumidity(weather, documentElements.humidity, documentElements.humidityStatus);
+        this.UpdateUvIndex(weather, documentElements.uvIndex, documentElements.uvIndexStatus);
+        this.UpdateVisibility(weather, documentElements.visibility, documentElements.visibilityStatus);
+        this.UpdateWindSpeed(weather, documentElements.windSpeedMobile, documentElements.windSpeedStatusMobile);
+        this.UpdateHumidity(weather, documentElements.humidityMobile, documentElements.humidityStatusMobile);
+        this.UpdateUvIndex(weather, documentElements.uvIndexMobile, documentElements.uvIndexStatusMobile);
+        this.UpdateVisibility(weather, documentElements.visibilityMobile, documentElements.visibilityStatusMobile);
+    }
+
+    UpdateWindSpeed(weather, e1, e2){
         let windSpeed = weather.windspeed / 3.6;
-        documentElements.windSpeed.innerText = `${Math.round(windSpeed)} м/с`;
-        documentElements.humidity.innerText = `${weather.humidity} %`;
-        documentElements.visibility.innerText = `${weather.visibility} км`;
-        statusUpdater.updateVisibility(weather.visibility);
-        statusUpdater.updateHumidity(weather.humidity);
-        statusUpdater.updateUvIndex(weather.uvindex);
-        statusUpdater.updateWindSpeed(windSpeed);
+        e1.innerText = `${Math.round(windSpeed)} м/с`;
+        statusUpdater.updateWindSpeed(windSpeed, e2);
+    }
+    UpdateHumidity(weather, e1, e2){
+        e1.innerText = `${weather.humidity} %`;
+        statusUpdater.updateHumidity(weather.humidity, e2);
+    }
+    UpdateVisibility(weather, e1, e2){
+        e1.innerText = `${weather.visibility} км`;
+        statusUpdater.updateVisibility(weather.visibility, e2);
+    }
+
+    UpdateUvIndex(weather, e1, e2){
+        e1.innerText = weather.uvindex;
+        statusUpdater.updateUvIndex(weather.uvindex, e2);
     }
 }
