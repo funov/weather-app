@@ -13,11 +13,14 @@
     <div class="sidebar">
         <div>
             <form class="search" id="search">
-                <input type="text" id="query" placeholder="Поиск..."/>
+                <input type="text" id="query" placeholder="Поиск..." list="cities"/>
                 <button id="search-button" type="submit"><img
                         src="{{ url_for('static', path='/icons/lupa.png') }}"
                         alt="">
                 </button>
+                <datalist id="cities"></datalist>
+                <script type="module"
+                        src="{{ url_for('static', path='/scripts/Autocomplete.js') }}"></script>
             </form>
             <div class="weather-icon">
                 <img src="{{ url_for('static', path='/icons/sun/4.png') }}"

@@ -9,6 +9,7 @@ export class DocumentElements {
     windSpeed = document.querySelector(".windSpeed");
     humidity = document.querySelector(".humidity");
     visibility = document.querySelector(".visibility");
+    airQuality = document.querySelector(".airQuality");
     uvIndexStatus = document.querySelector(".uvIndex-status");
     humidityStatus = document.querySelector(".humidity-status");
     visibilityStatus = document.querySelector(".visibility-status");

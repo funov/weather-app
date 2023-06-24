@@ -14,6 +14,10 @@ export class MediumCardsUpdater{
         this.UpdateHumidity(weather, documentElements.humidityMobile, documentElements.humidityStatusMobile);
         this.UpdateUvIndex(weather, documentElements.uvIndexMobile, documentElements.uvIndexStatusMobile);
         this.UpdateVisibility(weather, documentElements.visibilityMobile, documentElements.visibilityStatusMobile);
+        this.UpdateAirQuality(weather, documentElements.airQuality, documentElements.airQualityStatus);
+        this.UpdateAirQuality(weather, documentElements.airQualityMobile, documentElements.airQualityStatusMobile);
+        this.UpdateFeelsLike(weather, documentElements.feelsLike);
+        this.UpdateFeelsLike(weather, documentElements.feelsLikeMobile);
     }
 
     UpdateWindSpeed(weather, e1, e2){
@@ -33,5 +37,12 @@ export class MediumCardsUpdater{
     UpdateUvIndex(weather, e1, e2){
         e1.innerText = weather.uvindex;
         statusUpdater.updateUvIndex(weather.uvindex, e2);
+    }
+    UpdateAirQuality(weather, e1, e2){
+        e1.innerText = weather.winddir;
+        statusUpdater.updateAirQuality(weather.winddir, e2);
+    }
+    UpdateFeelsLike(weather, e){
+        e.innerText = weather.feelslike;
     }
 }

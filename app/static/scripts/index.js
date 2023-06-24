@@ -28,7 +28,14 @@ export let changeWeatherData = (city, unit, hourlyOrWeek) => {
             method: "GET",
             headers: {},
         })
-        .then((response) => response.json())
+        .then((response) => {
+            if (!response.ok) {
+                alert("Мы не смогли найти твой город. Попробуй искать на английском языке");
+                return;
+            }
+
+            return response.json()
+        })
         .then((data) => {
             let currentConditions = data.currentConditions;
             forecastUpdater.createCards(data.days[0].hours, 'c', "hourly", documentElements.todayCards,true);
@@ -47,25 +54,54 @@ export let changeWeatherData = (city, unit, hourlyOrWeek) => {
             currentState.timezone = data['timezone'];
             documentElements.date.innerText = dateTimeUpdater.getDateTimeByTimezone(currentState.timezone);
             backgroundUpdater.UpdateBackground(dateTimeUpdater.hour);
-        })
-        .catch((err) => {
-            alert(err);
         });
 }
 
 export function getIcon(condition) {
-    if (condition === "partly-cloudy-day") {
-        return "https://i.ibb.co/PZQXH8V/27.png";
-    } else if (condition === "partly-cloudy-night") {
-        return "https://i.ibb.co/Kzkk59k/15.png";
-    } else if (condition === "rain") {
-        return "https://i.ibb.co/kBd2NTS/39.png";
-    } else if (condition === "clear-day") {
-        return "https://i.ibb.co/rb4rrJL/26.png";
-    } else if (condition === "clear-night") {
-        return "https://i.ibb.co/1nxNGHL/10.png";
-    } else {
-        return "https://i.ibb.co/rb4rrJL/26.png";
+    switch (condition) {
+        case "snow":
+        case "snow-showers-day":
+            return "../icons/sun/Snow.png";
+        case "snow-showers-night": {
+            let random = 2 * Math.random() + Math.random();
+            while (random > 2) {
+                random = 2 * Math.random() + Math.random();
+            }
+            if (random === 0)
+                return "../icons/moon/SnowShowersNight.png";
+            else if (random === 1)
+                return "../icons/moon/SnowShowersNight2.png";
+            return "../icons/moon/SnowShowersNight3.png";
+        }
+        case "thunder-rain":
+        case "thunder-showers-day":
+            return "../icons/sun/ThunderShowersDay.png";
+        case "thunder-showers-night": {
+            let random = Math.random();
+            return random === 0 ? "../icons/moon/ThunderShowersNight.png" : "../icons/moon/ThunderShowersNight2.png";
+        }
+        case "showers-day":
+            return "../icons/sun/ShowersDay.png";
+        case "showers-night":
+            return "../icons/moon/ShowersNight.png";
+        case "fog":
+            return "../icons/cloud/Cloudy.png";
+        case "wind":
+            return "../icons/sun/Wind.png";
+        case "cloudy":
+            return "../icons/cloud/Cloudy.png";
+        case "partly-cloudy-day":
+            return "../icons/sun/PartlyCloudyDay.png";
+        case "partly-cloudy-night": {
+            let random = Math.random();
+            return random === 0 ? "../icons/sun/PartlyCloudyNight.png" : "../icons/sun/PartlyCloudyNight2.png";
+        }
+        case "rain":
+            return "../icons/rain/Rain.png";
+        case "clear-day":
+            return "../icons/sun/ClearDay.png";
+        case "clear-night":
+            return "../icons/star/ClearNight.png";
     }
 }
 
@@ -91,6 +127,8 @@ documentElements.searchForm.addEventListener("submit", (e) => {
     if (location) {
         currentState.currentCity = location;
         changeWeatherData(location, currentState.currentUnit, currentState.hourlyOrWeek);
+    } else {
+        alert("Мы не смогли найти город с таким названием. Попробуй искать на английском языке.");
     }
 });
 
