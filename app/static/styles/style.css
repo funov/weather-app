@@ -815,4 +815,23 @@ img {
     }
 }
 
+[class*="copyrights-pane"] {
+    display: none !important;
+}
 
+.ymaps-balloon-text {
+    margin: 0 0 20% 0;
+}
+
+.ymaps-balloon {
+    display: flex;
+    font-family: "Poppins", sans-serif;
+    flex-direction: column-reverse;
+    text-align: center;
+}
+
+.ymaps-balloon-icon {
+    width: 50%;
+    height: 50%;
+    margin: auto;
+}
