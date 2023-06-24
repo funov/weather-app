@@ -20,15 +20,13 @@ class WeatherClient:
         self._weather_api_url = weather_api_settings.weather_api_url
         self.api_keys_manager = WeatherApiKeysManager(self._weather_api_keys, logger)
         self.logger = logger
-        # TODO test this
-        self.http_client = httpx.AsyncClient()
+        self.http_client = httpx.AsyncClient(base_url=self._weather_api_url)
 
     def __del__(self):
         asyncio.run(self.http_client.aclose())
 
     async def get_next_week_weather(self, location: str, lang: str = 'ru', unit_group: str = 'metric') -> dict:
-        url = f'{self._weather_api_url}/{location}/next7days'
-        response = await self._send_weather_request(url, lang, unit_group)
+        response = await self._send_weather_request(f'/{location}/next7days', lang, unit_group)
         response_json = response.json()
         days = self._get_days_from_json(response_json['days'])
 
@@ -39,8 +37,7 @@ class WeatherClient:
         }
 
     async def get_today_weather(self, location: str, lang: str = 'ru', unit_group: str = 'metric') -> dict:
-        url = f'{self._weather_api_url}/{location}/today'
-        response = await self._send_weather_request(url, lang, unit_group)
+        response = await self._send_weather_request(f'/{location}/today', lang, unit_group)
         response_json = response.json()
         days = self._get_days_from_json(response_json['days'])
 
@@ -51,8 +48,7 @@ class WeatherClient:
         }
 
     async def get_now_weather(self, location: str, lang: str = 'ru', unit_group: str = 'metric') -> dict:
-        url = f'{self._weather_api_url}/{location}/today'
-        response = await self._send_weather_request(url, lang, unit_group)
+        response = await self._send_weather_request(f'/{location}/today', lang, unit_group)
         response_json = response.json()
         current_conditions = response_json['currentConditions']
         today = response_json['days'][0]
@@ -89,7 +85,7 @@ class WeatherClient:
         except httpx.TimeoutException:
             raise WeatherNotFoundError("Weather not found because of timeout")
 
-        logging_url = f'{url}?key={api_key}&lang={lang}&unitGroup={unit_group}&elements={self.elements}'
+        logging_url = f'...{url}?key={api_key}&lang={lang}&unitGroup={unit_group}&elements=...'
         self.logger.info(f'[WeatherApiClient] GET {logging_url} {response.http_version} {response.status_code}')
 
         if response.status_code != 200:

@@ -4,8 +4,8 @@ from typing import Union
 
 
 class WeatherApiKeysManager:
-    # TODO max_request_count = 1000 / workers_count
-    def __init__(self, weather_api_keys: list, logger: logging.Logger, max_request_count: int = 1000) -> None:
+    # max_request_count = 1000 / workers_count
+    def __init__(self, weather_api_keys: list, logger: logging.Logger, max_request_count: int = 250) -> None:
         self.logger = logger
         self._max_request_count = max_request_count
         self._weather_api_keys = weather_api_keys
