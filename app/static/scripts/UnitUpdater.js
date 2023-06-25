@@ -23,8 +23,4 @@ export class UnitUpdater {
             changeWeatherData(currentState.currentCity, currentState.currentUnit, currentState.hourlyOrWeek);
         }
     }
-
-    celsiusToFahrenheit(temp) {
-        return Math.round((temp * 9) / 5 + 32);
-    }
 }
