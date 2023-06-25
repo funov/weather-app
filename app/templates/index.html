@@ -1,236 +1,227 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link href="app/static/styles/style.css" rel="stylesheet">
-    <script src="https://api-maps.yandex.ru/2.1/?apikey=99c6fe68-fe8e-4f35-9d55-e063878aabb8&lang=ru_RU" type="text/javascript"></script>
-    <title>Weather App</title>
+	<meta charset="UTF-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<link href="app/static/styles/style.css" rel="stylesheet">
+	<script src="https://api-maps.yandex.ru/2.1/?apikey=99c6fe68-fe8e-4f35-9d55-e063878aabb8&lang=ru_RU" type="text/javascript"></script>
+	<title>Weather App</title>
 </head>
 <body>
 <div class="wrapper">
-    <div class="sidebar">
-        <div>
-            <form class="search" id="search">
-                <input type="text" id="query" placeholder="Поиск..." list="cities"/>
-                <button id="search-button" type="submit"><img
-                        src="{{ url_for('static', path='/icons/lupa.png') }}"
-                        alt="">
-                </button>
-                <datalist id="cities"></datalist>
-                <script type="module"
-                        src="{{ url_for('static', path='/scripts/Autocomplete.js') }}"></script>
-            </form>
-            <div class="weather-icon">
-                <img src="{{ url_for('static', path='/icons/sun/ClearDay.png') }}"
-                     alt="" id="icon"/>
-            </div>
-            <div class="temperature">
-                <h1 id="temp">0</h1>
-                <span class="temp-unit">°C</span>
-            </div>
-            <div class="date-time">
-                <p id="date-time">Понедельник, 12:00</p>
-            </div>
-            <div class="divider"></div>
-            <div class="description">
-                <i class="fas fa-cloud"></i>
-                <p id="description">condition</p>
-            </div>
-            <div class="mobile-cards">
-                <div class="today-cards"></div>
-                <div class="week-cards"></div>
-            </div>
-            <div class="sidebar-cards">
-                <button id="sidebar-card" type="submit" value="Moscow">
-                    <div class="main-data">
-                        <div class="city">
-                            <p class="name" id="MscName">Москва</p>
-                            <p class="date" id="MscDate">12:00</p>
-                        </div>
-                        <div class="temperature">
-                            <p class="temp" id="MscTemp">9</p>
-{#                            <p class="unit" id="MscUnit">°C</p>#}
-                        </div>
-                    </div>
-                    <div class="minor-data">
-                        <img src="{{ url_for('static', path='/icons/arrow_up.png') }}" alt="" id="arrow_up"/>
-                        <p class="max" id="MscMax">20</p>
-                        <img src="{{ url_for('static', path='/icons/arrow_down.png') }}" alt="" id="arrow_down"/>
-                        <p class="min" id="MscMin">10</p>
-                    </div>
-                </button>
-                <button id="sidebar-card" type="submit" value="Saint Petersburg">
-                    <div class="main-data">
-                        <div class="city">
-                            <p class="name" id="SpbName">Санкт-Петербург</p>
-                            <p class="date" id="SpbDate">12:00</p>
-                        </div>
-                        <div class="temperature">
-                            <p class="temp" id="SpbTemp">9</p>
-{#                            <p class="unit" id="SpbUnit">°C</p>#}
-                        </div>
-                    </div>
-                    <div class="minor-data">
-                        <img src="{{ url_for('static', path='/icons/arrow_up.png') }}" alt="" id="arrow_up"/>
-                        <p class="max" id="SpbMax">20</p>
-                        <img src="{{ url_for('static', path='/icons/arrow_down.png') }}" alt="" id="arrow_down"/>
-                        <p class="min" id="SpbMin">10</p>
-                    </div>
-                </button>
-                <button id="sidebar-card" type="submit" value="Yekaterinburg">
-                    <div class="main-data">
-                        <div class="city">
-                            <p class="name" id="EkbName">Екатеринбург</p>
-                            <p class="date" id="EkbDate">12:00</p>
-                        </div>
-                        <div class="temperature">
-                            <p class="temp" id="EkbTemp">9</p>
-{#                            <p class="unit" id="EkbUnit">°C</p>#}
-                        </div>
-                    </div>
-                    <div class="minor-data">
-                        <img src="{{ url_for('static', path='/icons/arrow_up.png') }}" alt="" id="arrow_up"/>
-                        <p class="max" id="EkbMax">20</p>
-                        <img src="{{ url_for('static', path='/icons/arrow_down.png') }}" alt="" id="arrow_down"/>
-                        <p class="min" id="EkbMin">10</p>
-                    </div>
-                </button>
-            </div>
-            <div class="medium-cards-mobile">
-                <div class="medium-card-mobile">
-                    <h4 class="card-heading-mobile">Ощущается как</h4>
-                    <div class="content-mobile">
-                        <p class="feelsLike-mobile">0</p>
-{#                        <p class="feelsLike-status">Низкий</p>#}
-                    </div>
-                </div>
-                <div class="medium-card-mobile">
-                    <h4 class="card-heading-mobile">UV Индекс</h4>
-                    <div class="content-mobile">
-                        <p class="uvIndex-mobile">0</p>
-                        <p class="uvIndex-status-mobile">Низкий</p>
-                    </div>
-                </div>
-                <div class="medium-card-mobile">
-                    <h4 class="card-heading-mobile">Скорость ветра</h4>
-                    <div class="content-mobile">
-                        <p class="windSpeed-mobile">0</p>
-                        <p class="windSpeed-status-mobile">Низкая</p>
-                    </div>
-                </div>
-                <div class="medium-card-mobile">
-                    <h4 class="card-heading-mobile">Видимость</h4>
-                    <div class="content-mobile">
-                        <p class="visibility-mobile">0</p>
-                        <p class="visibility-status-mobile">Нормальная</p>
-                    </div>
-                </div>
-                <div class="medium-card-mobile">
-                    <h4 class="card-heading-mobile">Влажность</h4>
-                    <div class="content-mobile">
-                        <p class="humidity-mobile">0</p>
-                        <p class="humidity-status-mobile">Нормальная</p>
-                    </div>
-                </div>
-                <div class="medium-card-mobile">
-                    <h4 class="card-heading-mobile">Качество воздуха</h4>
-                    <div class="content-mobile">
-                        <p class="airQuality-mobile">0</p>
-                        <p class="airQuality-status-mobile">Низкое</p>
-                    </div>
-                </div>
-            </div>
-            <div class="large-card-mobile">
-                <h4 class="card-heading">Карты</h4>
-                <div id="map"></div>
-            </div>
-        </div>
-        <div class="location">
-            <div class="location-icon">
-                <i class="fas fa-map-marker-alt"></i>
-            </div>
-            <div class="location-text">
-                <p id="location">location</p>
-            </div>
-        </div>
-    </div>
-    <div class="main">
-        <nav>
-            <ul class="options">
-                <button class="hourly">Сегодня</button>
-                <button class="week active">Неделя</button>
-            </ul>
-            <ul class="options units">
-                <p class="text-units">Метрика:</p>
-                <button class="celsius active">°C</button>
-                <button class="fahrenheit">°F</button>
-            </ul>
-        </nav>
-        <div class="cards" id="weather-cards"></div>
-        <div class="highlights">
-            <h2 class="heading">Сейчас</h2>
-            <div class="medium-cards">
-                <div class="medium-card">
-                    <h4 class="card-heading">Ощущается как</h4>
-                    <div class="content">
-                        <p class="feelsLike">0</p>
-{#                        <p class="feelsLike-status">Низкий</p>#}
-                    </div>
-                </div>
-                <div class="medium-card">
-                    <h4 class="card-heading">UV Индекс</h4>
-                    <div class="content">
-                        <p class="uvIndex">0</p>
-                        <p class="uvIndex-status">Низкий</p>
-                    </div>
-                </div>
-                <div class="medium-card">
-                    <h4 class="card-heading">Скорость ветра</h4>
-                    <div class="content">
-                        <p class="windSpeed">0</p>
-                        <p class="windSpeed-status">Низкая</p>
-                    </div>
-                </div>
-                <div class="medium-card">
-                    <h4 class="card-heading">Видимость</h4>
-                    <div class="content">
-                        <p class="visibility">0</p>
-                        <p class="visibility-status">Нормальная</p>
-                    </div>
-                </div>
-                <div class="medium-card">
-                    <h4 class="card-heading">Влажность</h4>
-                    <div class="content">
-                        <p class="humidity">0</p>
-                        <p class="humidity-status">Нормальная</p>
-                    </div>
-                </div>
-                <div class="medium-card">
-                    <h4 class="card-heading">Качество воздуха</h4>
-                    <div class="content">
-                        <p class="airQuality">0</p>
-                        <p class="airQuality-status">Низкое</p>
-                    </div>
-                </div>
-            </div>
-            <div class="large-card">
-                <h4 class="card-heading">Карты</h4>
-                <div class="content"></div>
-            </div>
-        </div>
-    </div>
+	<div class="sidebar">
+		<div>
+			<form class="search" id="search">
+				<input type="text" id="query" placeholder="Поиск..." list="cities"/>
+				<button id="search-button" type="submit"><img src="app/static/icons/lupa.png" alt="">
+				</button>
+				<datalist id="cities"></datalist>
+				<script type="module" src="app/static/scripts/Autocomplete.js"></script>
+			</form>
+			<div class="weather-icon">
+				<img src="app/static/icons/sun/ClearDay.png" alt="" id="icon"/>
+			</div>
+			<div class="temperature">
+				<h1 id="temp">0</h1>
+				<span class="temp-unit">°C</span>
+			</div>
+			<div class="date-time">
+				<p id="date-time">Понедельник, 12:00</p>
+			</div>
+			<div class="divider"></div>
+			<div class="description">
+				<i class="fas fa-cloud"></i>
+				<p id="description">condition</p>
+			</div>
+			<div class="mobile-cards">
+				<div class="today-cards"></div>
+				<div class="week-cards"></div>
+			</div>
+			<div class="sidebar-cards">
+				<button id="sidebar-card" type="submit" value="Moscow">
+					<div class="main-data">
+						<div class="city">
+							<p class="name" id="MscName">Москва</p>
+							<p class="date" id="MscDate">12:00</p>
+						</div>
+						<div class="temperature">
+							<p class="temp" id="MscTemp">9</p>
+						</div>
+					</div>
+					<div class="minor-data">
+						<img src="app/static/icons/arrow_up.png" alt="" id="arrow_up"/>
+						<p class="max" id="MscMax">20</p>
+						<img src="app/static/icons/arrow_down.png" alt="" id="arrow_down"/>
+						<p class="min" id="MscMin">10</p>
+					</div>
+				</button>
+				<button id="sidebar-card" type="submit" value="Saint Petersburg">
+					<div class="main-data">
+						<div class="city">
+							<p class="name" id="SpbName">Санкт-Петербург</p>
+							<p class="date" id="SpbDate">12:00</p>
+						</div>
+						<div class="temperature">
+							<p class="temp" id="SpbTemp">9</p>
+						</div>
+					</div>
+					<div class="minor-data">
+						<img src="app/static/icons/arrow_up.png" alt="" id="arrow_up"/>
+						<p class="max" id="SpbMax">20</p>
+						<img src="app/static/icons/arrow_down.png" alt="" id="arrow_down"/>
+						<p class="min" id="SpbMin">10</p>
+					</div>
+				</button>
+				<button id="sidebar-card" type="submit" value="Yekaterinburg">
+					<div class="main-data">
+						<div class="city">
+							<p class="name" id="EkbName">Екатеринбург</p>
+							<p class="date" id="EkbDate">12:00</p>
+						</div>
+						<div class="temperature">
+							<p class="temp" id="EkbTemp">9</p>
+						</div>
+					</div>
+					<div class="minor-data">
+						<img src="app/static/icons/arrow_up.png" alt="" id="arrow_up"/>
+						<p class="max" id="EkbMax">20</p>
+						<img src="app/static/icons/arrow_down.png" alt="" id="arrow_down"/>
+						<p class="min" id="EkbMin">10</p>
+					</div>
+				</button>
+			</div>
+			<div class="medium-cards-mobile">
+				<div class="medium-card-mobile">
+					<h4 class="card-heading-mobile">Ощущается как</h4>
+					<div class="content-mobile">
+						<p class="feelsLike-mobile">0</p>
+					</div>
+				</div>
+				<div class="medium-card-mobile">
+					<h4 class="card-heading-mobile">UV Индекс</h4>
+					<div class="content-mobile">
+						<p class="uvIndex-mobile">0</p>
+						<p class="uvIndex-status-mobile">Низкий</p>
+					</div>
+				</div>
+				<div class="medium-card-mobile">
+					<h4 class="card-heading-mobile">Скорость ветра</h4>
+					<div class="content-mobile">
+						<p class="windSpeed-mobile">0</p>
+						<p class="windSpeed-status-mobile">Низкая</p>
+					</div>
+				</div>
+				<div class="medium-card-mobile">
+					<h4 class="card-heading-mobile">Видимость</h4>
+					<div class="content-mobile">
+						<p class="visibility-mobile">0</p>
+						<p class="visibility-status-mobile">Нормальная</p>
+					</div>
+				</div>
+				<div class="medium-card-mobile">
+					<h4 class="card-heading-mobile">Влажность</h4>
+					<div class="content-mobile">
+						<p class="humidity-mobile">0</p>
+						<p class="humidity-status-mobile">Нормальная</p>
+					</div>
+				</div>
+				<div class="medium-card-mobile">
+					<h4 class="card-heading-mobile">Качество воздуха</h4>
+					<div class="content-mobile">
+						<p class="airQuality-mobile">0</p>
+						<p class="airQuality-status-mobile">Низкое</p>
+					</div>
+				</div>
+			</div>
+			<div class="large-card-mobile">
+				<h4 class="card-heading">Карты</h4>
+				 <div id="map-mobile"></div>
+			</div>
+		</div>
+		<div class="location">
+			<div class="location-icon">
+				<i class="fas fa-map-marker-alt"></i>
+			</div>
+			<div class="location-text">
+				<p id="location">location</p>
+			</div>
+		</div>
+	</div>
+	<div class="main">
+		<nav>
+			<ul class="options">
+				<button class="hourly">Сегодня</button>
+				<button class="week active">Неделя</button>
+			</ul>
+			<ul class="options units">
+				<p class="text-units">Метрика:</p>
+				<button class="celsius active">°C</button>
+				<button class="fahrenheit">°F</button>
+			</ul>
+		</nav>
+		<div class="cards" id="weather-cards"></div>
+		<div class="highlights">
+			<h2 class="heading">Сейчас</h2>
+			<div class="medium-cards">
+				<div class="medium-card">
+					<h4 class="card-heading">Ощущается как</h4>
+					<div class="content">
+						<p class="feelsLike">0</p>
+					</div>
+				</div>
+				<div class="medium-card">
+					<h4 class="card-heading">UV Индекс</h4>
+					<div class="content">
+						<p class="uvIndex">0</p>
+						<p class="uvIndex-status">Низкий</p>
+					</div>
+				</div>
+				<div class="medium-card">
+					<h4 class="card-heading">Скорость ветра</h4>
+					<div class="content">
+						<p class="windSpeed">0</p>
+						<p class="windSpeed-status">Низкая</p>
+					</div>
+				</div>
+				<div class="medium-card">
+					<h4 class="card-heading">Видимость</h4>
+					<div class="content">
+						<p class="visibility">0</p>
+						<p class="visibility-status">Нормальная</p>
+					</div>
+				</div>
+				<div class="medium-card">
+					<h4 class="card-heading">Влажность</h4>
+					<div class="content">
+						<p class="humidity">0</p>
+						<p class="humidity-status">Нормальная</p>
+					</div>
+				</div>
+				<div class="medium-card">
+					<h4 class="card-heading">Качество воздуха</h4>
+					<div class="content">
+						<p class="airQuality">0</p>
+						<p class="airQuality-status">Низкое</p>
+					</div>
+				</div>
+			</div>
+			<div class="large-card">
+				<h4 class="card-heading">Карты</h4>
+				 <div id="map"></div>
+			</div>
+		</div>
+	</div>
 </div>
 <div class="glow-box">
-    <div class="glow-box-left">
-        <div class="glow-left"></div>
-    </div>
-    <div class="glow-box-right">
-        <div class="glow-right"></div>
-    </div>
+	<div class="glow-box-left">
+		<div class="glow-left"></div>
+	</div>
+	<div class="glow-box-right">
+		<div class="glow-right"></div>
+	</div>
 </div>
 
-<script src="app/static/scripts/script.js"></script>
+<script type="module" src="app/static/scripts/index.js"></script>
 </body>
 </html>

@@ -34,7 +34,7 @@ async def startup_event():
 @app.get("/")
 async def root():
     # Jinja cannot be used 🫠🫠🫠
-    with open("app/templates/index.html", "r") as file:
+    with open("app/templates/index.html", "r", encoding='UTF-8') as file:
         html_content = file.read()
     return HTMLResponse(content=html_content, status_code=200)
 

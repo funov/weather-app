@@ -443,15 +443,13 @@ img {
     display: none;
 }
 
-/*.sidebar .medium-cards{*/
-/*    display: none;*/
-/*}*/
-
 .medium-cards-mobile {
     display: none;
 }
+
 .large-card-mobile {
     display: none;
+    height: 75vh !important;
 }
 
 
@@ -817,6 +815,16 @@ img {
 
 [class*="copyrights-pane"] {
     display: none !important;
+}
+
+#map-mobile {
+    width: 100%;
+    height: 100%;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
 }
 
 .ymaps-balloon-text {

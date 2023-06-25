@@ -38,8 +38,8 @@ export let changeWeatherData = (city, unit, hourlyOrWeek) => {
         })
         .then((data) => {
             let currentConditions = data.currentConditions;
-            forecastUpdater.createCards(data.days[0].hours, 'c', "hourly", documentElements.todayCards,true);
-            forecastUpdater.createCards(data.days, 'c', 'week', documentElements.weekCards,true);
+            forecastUpdater.createCards(data.days[0].hours, 'c', "hourly", documentElements.todayCards, true);
+            forecastUpdater.createCards(data.days, 'c', 'week', documentElements.weekCards, true);
 
             sidebarCardsUpdater.UpdateData();
             mediumCardsUpdater.UpdateData(currentConditions, documentElements.mediumCardsMobile);
@@ -147,3 +147,97 @@ function getValue(e) {
 
 
 geolocator.defineLocationByLatLon();
+
+
+const fetchData = async (url) => {
+    try {
+        const response = await fetch(url);
+        let weather = await response.json();
+        console.log(weather);
+        return weather;
+    } catch (err) {
+        console.log(err);
+        return null;
+    }
+};
+
+ymaps.ready(init);
+let map, mapMobile, myPlacemark;
+
+// TODO °F currentState.currentUnit
+function init() {
+    let width = getWindowSize()[0]
+
+    if (width < 600) {
+        mapMobile = createMap("map-mobile");
+    } else {
+        map = createMap("map");
+    }
+}
+
+function getWindowSize() {
+    let windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    let windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    return [windowWidth, windowHeight]
+}
+
+window.addEventListener('resize', handleMap);
+
+function handleMap() {
+    let width = getWindowSize()[0]
+    let mapElement = document.getElementById("map");
+    let mapMobileElement = document.getElementById("map-mobile");
+    let mapElementChild = mapElement.children.item(0);
+    let mapMobileElementChild = mapMobileElement.children.item(0);
+
+    if (width < 600 && mapMobileElementChild == null && mapElementChild != null) {
+        mapElement.removeChild(mapElementChild);
+        mapMobile = createMap("map-mobile");
+    } else if (width >= 600 && mapMobileElementChild != null && mapElementChild == null) {
+        mapMobileElement.removeChild(mapMobileElementChild);
+        map = createMap("map");
+    }
+}
+
+function createMap(tag) {
+    let yaMap = new ymaps.Map(tag, {
+        center: [55.76, 37.64], zoom: 4
+    }, {
+        searchControlProvider: 'yandex#search', restrictMapArea: [[85, -179], [-85, 180]]
+    });
+
+    yaMap.cursors.push('pointer');
+
+    yaMap.events.add('click', async function (e) {
+        let coords = e.get('coords');
+        let weather = await fetchData(`/api/v1.0/now/byCoordinates?lat=${coords[0]}&lon=${coords[1]}`).then();
+        let balloonContent = `<div class="ymaps-balloon"><p class="ymaps-balloon-text">${weather.temperature}°C</p><img src="app/static/weather_icons/${weather.icon}.png" class="ymaps-balloon-icon"></div>`;
+
+        if (myPlacemark) {
+            yaMap.geoObjects.remove(myPlacemark);
+            myPlacemark = createPlacemark(coords, balloonContent);
+            yaMap.geoObjects.add(myPlacemark);
+        } else {
+            myPlacemark = createPlacemark(coords, balloonContent);
+            yaMap.geoObjects.add(myPlacemark);
+        }
+    });
+
+    yaMap.controls.remove('geolocationControl');
+    yaMap.controls.remove('searchControl');
+    yaMap.controls.remove('trafficControl');
+    yaMap.controls.remove('typeSelector');
+    yaMap.controls.remove('fullscreenControl');
+    yaMap.controls.remove('zoomControl');
+    yaMap.controls.remove('rulerControl');
+
+    return yaMap;
+}
+
+function createPlacemark(coords, balloonContent) {
+    return new ymaps.Placemark(coords, {
+        hintContent: 'Нажми на меня😳', balloonContent: balloonContent
+    }, {
+        draggable: false
+    });
+}
