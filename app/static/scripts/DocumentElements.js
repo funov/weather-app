@@ -38,5 +38,4 @@ export class DocumentElements {
     mediumCardsMobile = document.querySelector('.medium-cards-mobile');
     airQualityMobile = document.querySelector('.airQuality-mobile');
     feelsLikeMobile = document.querySelector('.feelsLike-mobile');
-
 }

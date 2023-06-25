@@ -268,8 +268,14 @@ function createMap(tag) {
 
     yaMap.events.add('click', async function (e) {
         let coords = e.get('coords');
-        let weather = await fetchData(`/api/v1.0/now/byCoordinates?lat=${coords[0]}&lon=${coords[1]}`).then();
-        let balloonContent = `<div class="ymaps-balloon"><p class="ymaps-balloon-text">${weather.temperature}°C</p><img src="app/static/weather_icons/${weather.icon}.png" class="ymaps-balloon-icon"></div>`;
+        let weather;
+        if (currentState.currentUnit === 'f'){
+            weather = await fetchData(`/api/v1.0/now/byCoordinates?lat=${coords[0]}&lon=${coords[1]}&units=us`).then();
+        }
+        else {
+            weather = await fetchData(`/api/v1.0/now/byCoordinates?lat=${coords[0]}&lon=${coords[1]}`).then();
+        }
+        let balloonContent = `<div class="ymaps-balloon"><p class="ymaps-balloon-text">${weather.temperature}${currentState.currentUnit.toUpperCase()}</p><img src="app/static/weather_icons/${weather.icon}.png" class="ymaps-balloon-icon"></div>`;
 
         if (myPlacemark) {
             yaMap.geoObjects.remove(myPlacemark);
