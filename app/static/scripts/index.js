@@ -115,7 +115,7 @@ export function getIcon(condition) {
     switch (condition) {
         case "snow":
         case "snow-showers-day":
-            return "app/static/icons/sun/Snow.png";
+            return "app/static/icons/snow/Snow.png";
         case "snow-showers-night": {
             let random = 2 * Math.random() + Math.random();
             while (random > 2) {

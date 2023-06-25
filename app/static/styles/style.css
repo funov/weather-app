@@ -47,7 +47,6 @@ img {
     background: rgba(255, 255, 255, 0.815);
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
 }
 
 .search {
