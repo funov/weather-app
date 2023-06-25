@@ -24,6 +24,8 @@ class WeatherApiKeysManager:
         await self._priority_queue.put((priority, api_key))
 
     async def kill_api_key(self, api_key_to_kill: str) -> None:
+        data = []
+
         for i in range(len(self._weather_api_keys)):
             priority, api_key = await self._priority_queue.get()
 
@@ -32,6 +34,9 @@ class WeatherApiKeysManager:
                 self.logger.warning(f'[WeatherApiKeysManager] {api_key = } killed')
                 break
 
+            data.append((priority, api_key))
+
+        for priority, api_key in data:
             await self._priority_queue.put((priority, api_key))
 
     async def refresh_api_keys(self) -> None:
