@@ -22,8 +22,8 @@ let sidebarCardsUpdater = new SidebarCardsUpdater();
 let backgroundUpdater = new BackgroundUpdater();
 
 
-export let changeWeatherData = (city, unit, hourlyOrWeek) => {
-    fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&lang=ru&key=KH9Z3HUWAP52MDB7LBFC88FH5&contentType=json`,
+export let changeWeatherData = (type, unit, hourlyOrWeek, data1, data2='') => {
+    fetch(getUrl('now', type, data1, data2),
         {
             method: "GET",
             headers: {},
@@ -33,27 +33,81 @@ export let changeWeatherData = (city, unit, hourlyOrWeek) => {
                 alert("Мы не смогли найти твой город. Попробуй искать на английском языке");
                 return;
             }
-
             return response.json()
         })
         .then((data) => {
-            let currentConditions = data.currentConditions;
-            forecastUpdater.createCards(data.days[0].hours, 'c', "hourly", documentElements.todayCards, true);
-            forecastUpdater.createCards(data.days, 'c', 'week', documentElements.weekCards, true);
-
+            // let currentConditions = data.currentConditions;
             sidebarCardsUpdater.UpdateData();
-            mediumCardsUpdater.UpdateData(currentConditions, documentElements.mediumCardsMobile);
-            mediumCardsUpdater.UpdateData(currentConditions, documentElements.mediumCards);
+            mediumCardsUpdater.UpdateData(data, documentElements.mediumCardsMobile);
+            mediumCardsUpdater.UpdateData(data, documentElements.mediumCards);
             if (hourlyOrWeek === "hourly") {
-                forecastUpdater.renderForecastCards(data.days[0].hours, unit, hourlyOrWeek);
+                fetch(getUrl('today', type, data1, data2),
+                {
+                    method: "GET",
+                    headers: {},
+                })
+                .then((response) => {
+                    if (!response.ok) {
+                        alert("Мы не смогли найти твой город. Попробуй искать на английском языке");
+                        return;
+                    }
+                    return response.json()
+                })
+                .then((data) => {
+                    forecastUpdater.renderForecastCards(data.day, unit, hourlyOrWeek);
+                });
             } else {
-                forecastUpdater.renderForecastCards(data.days, unit, hourlyOrWeek);
+                fetch(getUrl('nextWeek', type, data1, data2),
+                {
+                    method: "GET",
+                    headers: {},
+                })
+                .then((response) => {
+                    if (!response.ok) {
+                        alert("Мы не смогли найти твой город. Попробуй искать на английском языке");
+                        return;
+                    }
+                    return response.json()
+                })
+                .then((data) => {
+                    forecastUpdater.renderForecastCards(data.days, unit, hourlyOrWeek);
+                });
             }
 
-            sidebarDataUpdater.updateData(data, currentConditions, unit);
-            currentState.timezone = data['timezone'];
+            sidebarDataUpdater.updateData(data, unit);
+            currentState.timezone = data.timezone;
             documentElements.date.innerText = dateTimeUpdater.getDateTimeByTimezone(currentState.timezone);
             backgroundUpdater.UpdateBackground(dateTimeUpdater.hour);
+        });
+    fetch(getUrl('today', type, data1, data2),
+        {
+            method: "GET",
+            headers: {},
+        })
+        .then((response) => {
+            if (!response.ok) {
+                alert("Мы не смогли найти твой город. Попробуй искать на английском языке");
+                return;
+            }
+            return response.json()
+        })
+        .then((data) => {
+            forecastUpdater.createCards(data.day, 'c', "hourly", documentElements.todayCards, true);
+        });
+    fetch(getUrl('nextWeek', type, data1, data2),
+        {
+            method: "GET",
+            headers: {},
+        })
+        .then((response) => {
+            if (!response.ok) {
+                alert("Мы не смогли найти твой город. Попробуй искать на английском языке");
+                return;
+            }
+            return response.json()
+        })
+        .then((data) => {
+            forecastUpdater.createCards(data.days, 'c', 'week', documentElements.weekCards, true);
         });
 }
 
@@ -125,8 +179,9 @@ documentElements.searchForm.addEventListener("submit", (e) => {
     e.preventDefault();
     let location = documentElements.search.value;
     if (location) {
+        currentState.type = 'city';
         currentState.currentCity = location;
-        changeWeatherData(location, currentState.currentUnit, currentState.hourlyOrWeek);
+        changeWeatherData('city', currentState.currentUnit, currentState.hourlyOrWeek, location);
     } else {
         alert("Мы не смогли найти город с таким названием. Попробуй искать на английском языке.");
     }
@@ -142,7 +197,9 @@ document.querySelectorAll('.sidebar-cards button')
 
 
 function getValue(e) {
-    changeWeatherData(this.value, currentState.currentUnit, currentState.hourlyOrWeek);
+    currentState.currentCity = this.value;
+    currentState.type = 'city';
+    changeWeatherData('city', currentState.currentUnit, currentState.hourlyOrWeek, this.value);
 }
 
 
@@ -153,10 +210,10 @@ const fetchData = async (url) => {
     try {
         const response = await fetch(url);
         let weather = await response.json();
-        console.log(weather);
+        // console.log(weather);
         return weather;
     } catch (err) {
-        console.log(err);
+        // console.log(err);
         return null;
     }
 };
@@ -203,7 +260,8 @@ function createMap(tag) {
     let yaMap = new ymaps.Map(tag, {
         center: [55.76, 37.64], zoom: 4
     }, {
-        searchControlProvider: 'yandex#search', restrictMapArea: [[85, -179], [-85, 180]]
+        searchControlProvider: 'yandex#search',
+        restrictMapArea: [[85, -179], [-85, 180]]
     });
 
     yaMap.cursors.push('pointer');
@@ -221,6 +279,10 @@ function createMap(tag) {
             myPlacemark = createPlacemark(coords, balloonContent);
             yaMap.geoObjects.add(myPlacemark);
         }
+        currentState.type = 'coordinates';
+        currentState.lat = coords[0];
+        currentState.lon = coords[1];
+        changeWeatherData('coordinates', currentState.currentUnit,currentState.hourlyOrWeek, coords[0], coords[1]);
     });
 
     yaMap.controls.remove('geolocationControl');
@@ -233,6 +295,14 @@ function createMap(tag) {
 
     return yaMap;
 }
+
+function getUrl(req, type, data1, data2='') {
+    if (type === 'coordinates'){
+        return `api/v1.0/${req}/byCoordinates?lat=${data1}&lon=${data2}&lang=ru&units=metric`;
+    }
+    return `api/v1.0/${req}/byLocation?location=${data1}&lang=ru&units=metric`;
+}
+
 
 function createPlacemark(coords, balloonContent) {
     return new ymaps.Placemark(coords, {

@@ -6,16 +6,16 @@ let documentElements = new DocumentElements();
 let unitUpdater = new UnitUpdater();
 
 export class SidebarDataUpdater {
-    updateData(data, currentConditions, unit) {
-        documentElements.currentLocation.innerText = data.resolvedAddress;
-        documentElements.description.innerText = currentConditions.conditions[0]
-            + currentConditions.conditions.slice(1).toLowerCase();
+    updateData(data, unit) {
+        documentElements.currentLocation.innerText = data.location;
+        // documentElements.description.innerText = currentConditions.conditions[0]
+        //     + currentConditions.conditions.slice(1).toLowerCase();
+        documentElements.description.innerText = data.description;
         if (unit === "c") {
-            documentElements.temp.innerText = Math.round(currentConditions.temp);
+            documentElements.temp.innerText = Math.round(data.temperature);
         } else {
-            documentElements.temp.innerText = unitUpdater.celsiusToFahrenheit(currentConditions.temp);
+            documentElements.temp.innerText = unitUpdater.celsiusToFahrenheit(data.temperature);
         }
-        console.log(currentConditions.icon);
-        documentElements.mainIcon.src = getIcon(currentConditions.icon);
+        documentElements.mainIcon.src = getIcon(data.icon);
     }
 }

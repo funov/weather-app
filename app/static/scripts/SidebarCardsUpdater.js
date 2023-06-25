@@ -21,12 +21,11 @@ export class SidebarCardsUpdater {
 }
 
 class SidebarCardUpdater {
-    //потом буду просто ходить в нашу апи, брать поля из now
     constructor(city, id, timezone) {
         this.city = city;
         this.timezone = timezone;
         this.id = id;
-        this.url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&key=KH9Z3HUWAP52MDB7LBFC88FH5&contentType=json`;
+        this.url = `api/v1.0/now/byLocation?location=${city}&lang=ru&units=metric`;
     }
 
     async UpdateCard() {
@@ -37,19 +36,18 @@ class SidebarCardUpdater {
             })
             .then((response) => response.json())
             .then((data) => {
-                let weather = data.currentConditions;
                 let time = dateTimeUpdater.getTimeByTimezone(this.timezone);
                 let temp;
                 let minTemp;
                 let maxTemp;
                 if (currentState.currentUnit === "c") {
-                    temp = Math.round(weather.temp);
-                    minTemp = Math.round(data.days[0].tempmin);
-                    maxTemp = Math.round(data.days[0].tempmax);
+                    temp = Math.round(data.temperature);
+                    minTemp = Math.round(data.temperatureMin);
+                    maxTemp = Math.round(data.temperatureMax);
                 } else {
-                    temp = unitUpdater.celsiusToFahrenheit(weather.temp);
-                    minTemp = unitUpdater.celsiusToFahrenheit(data.days[0].tempmin);
-                    maxTemp = unitUpdater.celsiusToFahrenheit(data.days[0].tempmax);
+                    temp = unitUpdater.celsiusToFahrenheit(data.temperature);
+                    minTemp = unitUpdater.celsiusToFahrenheit(data.temperatureMin);
+                    maxTemp = unitUpdater.celsiusToFahrenheit(data.temperatureMax);
                 }
                 document.getElementById(`${this.id}Date`).innerText = `${time}`;
                 document.getElementById(`${this.id}Temp`).innerText = `${temp}°${currentState.currentUnit.toUpperCase()}`;

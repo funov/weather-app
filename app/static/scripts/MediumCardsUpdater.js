@@ -21,7 +21,7 @@ export class MediumCardsUpdater{
     }
 
     UpdateWindSpeed(weather, e1, e2){
-        let windSpeed = weather.windspeed / 3.6;
+        let windSpeed = weather.windSpeed / 3.6;
         e1.innerText = `${Math.round(windSpeed)} м/с`;
         statusUpdater.updateWindSpeed(windSpeed, e2);
     }
@@ -35,14 +35,14 @@ export class MediumCardsUpdater{
     }
 
     UpdateUvIndex(weather, e1, e2){
-        e1.innerText = weather.uvindex;
-        statusUpdater.updateUvIndex(weather.uvindex, e2);
+        e1.innerText = weather.uvIndex;
+        statusUpdater.updateUvIndex(weather.uvIndex, e2);
     }
     UpdateAirQuality(weather, e1, e2){
-        e1.innerText = weather.winddir;
-        statusUpdater.updateAirQuality(weather.winddir, e2);
+        e1.innerText = weather.airQuality;
+        statusUpdater.updateAirQuality(weather.airQuality, e2);
     }
     UpdateFeelsLike(weather, e){
-        e.innerText = weather.feelslike;
+        e.innerText = weather.feelsLike;
     }
 }

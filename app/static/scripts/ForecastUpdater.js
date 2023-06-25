@@ -17,7 +17,7 @@ export class ForecastUpdater {
 
     createCards(data, unit, type, elem, mobile=false){
         elem.innerHTML = "";
-        let day = 0;
+        // let day = 0;
         let numCards;
         if (type === "hourly") {
             numCards = 24;
@@ -28,15 +28,22 @@ export class ForecastUpdater {
         for (let i = 0; i < numCards; i++) {
             let card = document.createElement("div");
             card.classList.add("card");
-            let dayName = this.getHour(data[day].datetime);
+            let dayName;
+            let dayTemp;
+            let iconCondition;
             if (type === "week") {
-                dayName = this.getDayName(data[day].datetime);
+                dayName = this.getDayName(data[i].date);
+                dayTemp = Math.round(data[i].hours[15].temperature);
+                iconCondition = data[i].hours[15].icon;
             }
-            let dayTemp = Math.round(data[day].temp);
+            else {
+                dayName = this.getHour(data.hours[i].hour);
+                dayTemp = Math.round(data.hours[i].temperature);
+                iconCondition = data.hours[i].icon;
+            }
             if (unit === "f") {
-                dayTemp = unitUpdater.celsiusToFahrenheit(data[day].temp);
+                dayTemp = unitUpdater.celsiusToFahrenheit(dayTemp);
             }
-            let iconCondition = data[day].icon;
             let iconSrc = getIcon(iconCondition);
             let tempUnit = "°C";
             if (unit === "f") {
@@ -58,7 +65,6 @@ export class ForecastUpdater {
                 div.classList.add('vert-divider');
                 elem.appendChild(div);
             }
-            day++;
         }
     }
 
@@ -73,7 +79,12 @@ export class ForecastUpdater {
                 documentElements.hourlyBtn.classList.remove("active");
                 documentElements.weekBtn.classList.add("active");
             }
-            changeWeatherData(currentState.currentCity, currentState.currentUnit, currentState.hourlyOrWeek);
+            if (currentState.type === 'city'){
+                changeWeatherData(currentState.type, currentState.currentUnit, currentState.hourlyOrWeek, currentState.currentCity);
+            }
+            else {
+                changeWeatherData(currentState.type, currentState.currentUnit, currentState.hourlyOrWeek, currentState.lat, currentState.lon);
+            }
         }
     }
 

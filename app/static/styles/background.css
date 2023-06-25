@@ -5,7 +5,7 @@
     z-index: -2;
     transform: translate(-50%, -50%);
     overflow: hidden;
-    top: 30%;
+    top: 320px;
     left: 4%;
     border-radius: 16.8em;
 }
@@ -176,6 +176,7 @@
     /*animation: twinkle 6s forwards;*/
 }
 
+
 @keyframes stars-night {
     0%{
         opacity: 0;
@@ -207,6 +208,7 @@
 }
 
 .glow-box {
+    justify-content: space-between;
     overflow-y: hidden;
     display: flex;
     height: 6.8em;

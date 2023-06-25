@@ -18,7 +18,7 @@ export class Geolocator {
                     .then((data) => {
                         let timezone = data.timezone;
                         currentState.currentCity = timezone.split('/')[1];
-                        changeWeatherData(currentState.currentCity, currentState.currentUnit, currentState.hourlyOrWeek);
+                        changeWeatherData('city', currentState.currentUnit, currentState.hourlyOrWeek,currentState.currentCity);
                     })
                     .catch((err) => {
                         alert(err);
