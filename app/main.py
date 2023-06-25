@@ -8,8 +8,8 @@ from starlette.staticfiles import StaticFiles
 from app.weather_client.weather_api_keys_refresher import WeatherApiKeysRefresher
 from app.weather_client.weather_api_settings import WeatherApiSettings
 from app.weather_client.weather_api_client import WeatherClient
-from app.weather_client.erros.all_api_keys_died_error import AllApiKeysDiedError
-from app.weather_client.erros.weather_not_found_error import WeatherNotFoundError
+from app.weather_client.errors.all_api_keys_died_error import AllApiKeysDiedError
+from app.weather_client.errors.weather_not_found_error import WeatherNotFoundError
 
 app = FastAPI()
 

@@ -2,8 +2,8 @@ import httpx
 import logging
 import asyncio
 from httpx import Response
-from app.weather_client.erros.all_api_keys_died_error import AllApiKeysDiedError
-from app.weather_client.erros.weather_not_found_error import WeatherNotFoundError
+from app.weather_client.errors.all_api_keys_died_error import AllApiKeysDiedError
+from app.weather_client.errors.weather_not_found_error import WeatherNotFoundError
 from app.weather_client.weather_api_keys_manager import WeatherApiKeysManager
 from app.weather_client.weather_api_settings import WeatherApiSettings
 
@@ -87,6 +87,10 @@ class WeatherClient:
 
         logging_url = f'...{url}?key={api_key}&lang={lang}&unitGroup={unit_group}&elements=...'
         self.logger.info(f'[WeatherApiClient] GET {logging_url} {response.http_version} {response.status_code}')
+
+        if response.status_code == 429:
+            await self.api_keys_manager.kill_api_key(api_key)
+            response = await self._send_weather_request(url, lang, unit_group)
 
         if response.status_code != 200:
             raise WeatherNotFoundError("Weather api response status code not equal 200")
