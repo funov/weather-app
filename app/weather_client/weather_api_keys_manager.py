@@ -4,8 +4,7 @@ from typing import Union
 
 
 class WeatherApiKeysManager:
-    # max_request_count = 1000 / workers_count
-    def __init__(self, weather_api_keys: list, logger: logging.Logger, max_request_count: int = 250) -> None:
+    def __init__(self, weather_api_keys: list, logger: logging.Logger, max_request_count: int = 1000) -> None:
         self.logger = logger
         self._max_request_count = max_request_count
         self._weather_api_keys = weather_api_keys
@@ -23,6 +22,17 @@ class WeatherApiKeysManager:
 
         self.logger.warning('[WeatherApiKeysManager] All api_keys died, wait for refresh')
         await self._priority_queue.put((priority, api_key))
+
+    async def kill_api_key(self, api_key_to_kill: str) -> None:
+        for i in range(len(self._weather_api_keys)):
+            priority, api_key = await self._priority_queue.get()
+
+            if api_key == api_key_to_kill:
+                await self._priority_queue.put((self._max_request_count, api_key))
+                self.logger.warning(f'[WeatherApiKeysManager] {api_key = } killed')
+                break
+
+            await self._priority_queue.put((priority, api_key))
 
     async def refresh_api_keys(self) -> None:
         self.logger.info('[WeatherApiKeysManager] Start refreshing api_keys')
