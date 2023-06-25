@@ -37,9 +37,8 @@ export let changeWeatherData = (type, unit, hourlyOrWeek, data1, data2='') => {
         })
         .then((data) => {
             // let currentConditions = data.currentConditions;
-            sidebarCardsUpdater.UpdateData();
-            mediumCardsUpdater.UpdateData(data, documentElements.mediumCardsMobile);
-            mediumCardsUpdater.UpdateData(data, documentElements.mediumCards);
+            mediumCardsUpdater.UpdateData(data);
+            mediumCardsUpdater.UpdateData(data, unit);
             if (hourlyOrWeek === "hourly") {
                 fetch(getUrl('today', type, data1, data2),
                 {
@@ -204,7 +203,7 @@ function getValue(e) {
 
 
 geolocator.defineLocationByLatLon();
-
+sidebarCardsUpdater.UpdateData();
 
 const fetchData = async (url) => {
     try {
@@ -221,7 +220,6 @@ const fetchData = async (url) => {
 ymaps.ready(init);
 let map, mapMobile, myPlacemark;
 
-// TODO °F currentState.currentUnit
 function init() {
     let width = getWindowSize()[0]
 
@@ -275,7 +273,8 @@ function createMap(tag) {
         else {
             weather = await fetchData(`/api/v1.0/now/byCoordinates?lat=${coords[0]}&lon=${coords[1]}`).then();
         }
-        let balloonContent = `<div class="ymaps-balloon"><p class="ymaps-balloon-text">${weather.temperature}${currentState.currentUnit.toUpperCase()}</p><img src="app/static/weather_icons/${weather.icon}.png" class="ymaps-balloon-icon"></div>`;
+        let text = `${weather.temperature}°${currentState.currentUnit.toUpperCase()}`;
+        let balloonContent = `<div class="ymaps-balloon"><p class="ymaps-balloon-text">text</p><img src="app/static/weather_icons/${weather.icon}.png" class="ymaps-balloon-icon"></div>`;
 
         if (myPlacemark) {
             yaMap.geoObjects.remove(myPlacemark);

@@ -1,11 +1,13 @@
 import {StatusMediumCardsUpdater} from "./StatusMediumCardsUpdater.js";
 import {DocumentElements} from "./DocumentElements.js";
+import {UnitUpdater} from "./UnitUpdater.js";
 
 let documentElements = new DocumentElements();
 let statusUpdater = new StatusMediumCardsUpdater();
+let unitUpdater = new UnitUpdater();
 
 export class MediumCardsUpdater{
-    UpdateData(weather) {
+    UpdateData(weather, unit='') {
         this.UpdateWindSpeed(weather, documentElements.windSpeed, documentElements.windSpeedStatus);
         this.UpdateHumidity(weather, documentElements.humidity, documentElements.humidityStatus);
         this.UpdateUvIndex(weather, documentElements.uvIndex, documentElements.uvIndexStatus);
@@ -16,7 +18,7 @@ export class MediumCardsUpdater{
         this.UpdateVisibility(weather, documentElements.visibilityMobile, documentElements.visibilityStatusMobile);
         this.UpdateAirQuality(weather, documentElements.airQuality, documentElements.airQualityStatus);
         this.UpdateAirQuality(weather, documentElements.airQualityMobile, documentElements.airQualityStatusMobile);
-        this.UpdateFeelsLike(weather, documentElements.feelsLike);
+        this.UpdateFeelsLike(weather, documentElements.feelsLike, unit);
         this.UpdateFeelsLike(weather, documentElements.feelsLikeMobile);
     }
 
@@ -26,11 +28,11 @@ export class MediumCardsUpdater{
         statusUpdater.updateWindSpeed(windSpeed, e2);
     }
     UpdateHumidity(weather, e1, e2){
-        e1.innerText = `${weather.humidity} %`;
+        e1.innerText = `${Math.round(weather.humidity)} %`;
         statusUpdater.updateHumidity(weather.humidity, e2);
     }
     UpdateVisibility(weather, e1, e2){
-        e1.innerText = `${weather.visibility} км`;
+        e1.innerText = `${Math.round(weather.visibility)} км`;
         statusUpdater.updateVisibility(weather.visibility, e2);
     }
 
@@ -39,10 +41,16 @@ export class MediumCardsUpdater{
         statusUpdater.updateUvIndex(weather.uvIndex, e2);
     }
     UpdateAirQuality(weather, e1, e2){
-        e1.innerText = weather.airQuality;
+        e1.innerText = Math.round(weather.airQuality);
         statusUpdater.updateAirQuality(weather.airQuality, e2);
     }
-    UpdateFeelsLike(weather, e){
-        e.innerText = weather.feelsLike;
+    UpdateFeelsLike(weather, e, unit=''){
+        console.log(unit);
+        if (unit === 'f'){
+            e.innerText = `${unitUpdater.celsiusToFahrenheit(weather.feelsLike)}°F`;
+        }
+        else {
+            e.innerText = `${Math.round(weather.feelsLike)}°C`;
+        }
     }
 }

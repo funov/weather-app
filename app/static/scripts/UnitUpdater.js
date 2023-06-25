@@ -20,7 +20,12 @@ export class UnitUpdater {
                 documentElements.celsiusBtn.classList.remove("active");
                 documentElements.fahrenheitBtn.classList.add("active");
             }
-            changeWeatherData(currentState.currentCity, currentState.currentUnit, currentState.hourlyOrWeek);
+            if (currentState.type === 'coordinates')
+                changeWeatherData(currentState.type, currentState.currentUnit,
+                    currentState.hourlyOrWeek, currentState.lat, currentState.lon);
+            else {
+                changeWeatherData(currentState.type, currentState.currentUnit, currentState.hourlyOrWeek, currentState.currentCity)
+            }
         }
     }
 
