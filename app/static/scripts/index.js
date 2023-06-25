@@ -274,7 +274,7 @@ function createMap(tag) {
             weather = await fetchData(`/api/v1.0/now/byCoordinates?lat=${coords[0]}&lon=${coords[1]}`).then();
         }
         let text = `${weather.temperature}°${currentState.currentUnit.toUpperCase()}`;
-        let balloonContent = `<div class="ymaps-balloon"><p class="ymaps-balloon-text">text</p><img src="app/static/weather_icons/${weather.icon}.png" class="ymaps-balloon-icon"></div>`;
+        let balloonContent = `<div class="ymaps-balloon"><p class="ymaps-balloon-text">${text}</p><img src="app/static/weather_icons/${weather.icon}.png" class="ymaps-balloon-icon"></div>`;
 
         if (myPlacemark) {
             yaMap.geoObjects.remove(myPlacemark);

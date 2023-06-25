@@ -45,7 +45,6 @@ export class MediumCardsUpdater{
         statusUpdater.updateAirQuality(weather.airQuality, e2);
     }
     UpdateFeelsLike(weather, e, unit=''){
-        console.log(unit);
         if (unit === 'f'){
             e.innerText = `${unitUpdater.celsiusToFahrenheit(weather.feelsLike)}°F`;
         }
