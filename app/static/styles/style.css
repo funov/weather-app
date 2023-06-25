@@ -331,7 +331,7 @@ img {
 
 .large-card {
     width: 790px;
-    height: 340px;
+    height: 75vh !important;
     border-radius: 20px;
     color: #1a1a1a;
     background-color: #fff;
