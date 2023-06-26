@@ -36,7 +36,7 @@ export let changeWeatherData = (type, unit, hourlyOrWeek, data1, data2='') => {
             return response.json()
         })
         .then((data) => {
-            // let currentConditions = data.currentConditions;
+            sidebarCardsUpdater.UpdateData();
             mediumCardsUpdater.UpdateData(data);
             mediumCardsUpdater.UpdateData(data, unit);
             if (hourlyOrWeek === "hourly") {
@@ -203,7 +203,6 @@ function getValue(e) {
 
 
 geolocator.defineLocationByLatLon();
-sidebarCardsUpdater.UpdateData();
 
 const fetchData = async (url) => {
     try {
